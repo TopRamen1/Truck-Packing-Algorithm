@@ -1,29 +1,66 @@
-from abc import ABC, abstractmethod
+
+from .functions import get_package_data
+from typing import List
 from copy import deepcopy
-
-import function as fun
-from typing import Optional, List, Dict
-import re
-
 
 class GetDataFromFile:
     def __init__(self, filename):
         self.filename = filename
-        self.address_id_weight_package = fun.get_address_id_weight_package(filename)
+        self.address_id_weight_package = get_package_data(filename)
         #self.load_id_trucks = fun.get_load_id_trucks(filename)
 
     def __str__(self) -> str:
         return '{self.address_id_weight_package}'.format(self=self)
 
+
 class Package:
-    def __init__(self, package_id: int, package_address: int, package_weight: float):
-        self.package_id = package_id
-        self.package_address = package_address
-        self.package_weight = package_weight
+    def __init__(self, id_: int, address_: int, weight_: float):
+        self.id = id_
+        self.address = address_
+        self.weight = weight_
 
     def __str__(self) -> str:
-        return 'Package no. {self.package_id}, Address: {self.package_address}, Weight: {self.package_weight}'.format(
+        return 'Package no. {self.id}, Address: {self.address}, Weight: {self.weight}'.format(
             self=self)
+
+
+class Truck:
+    def __init__(self, id_: int, type_: str, load_: int, exp_cost_: float, min_fuel_use_: float, max_fuel_use_: float):
+        self.id = id_
+        self.type = type_
+        self.load = load_
+        self.exp_cost = exp_cost_
+        self.min_fuel_use = min_fuel_use_
+        self.max_fuel_use = max_fuel_use_
+
+    def __str__(self) -> str:
+        return 'Truck no. {self.id}'.format(
+            self=self)
+
+
+class Storage:
+    def __init__(self, id_: int, distance_: float, address_: int):
+        self.id = id_
+        self.distance = distance_
+        self.address = address_
+
+    def __str__(self) -> str:
+        return 'Storage no. {self.id}'.format(
+            self=self)
+
+
+class MainStorage:
+    def __init__(self, package_list_: List[Package], truck_list_: List[Truck], storage_list_: List[Storage]):
+        self.package_list = deepcopy(package_list_)
+        self.truck_list = deepcopy(truck_list_)
+        self.storage_list = deepcopy(storage_list_)
+
+        del package_list_, truck_list_, storage_list_
+
+
+def objective_function (main_storage: MainStorage) -> float :
+    # implementacja funkcji celu
+    return 0
 
 
 if __name__ == '__main__':

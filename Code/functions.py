@@ -1,6 +1,6 @@
 
-def get_address_id_weight_package(filename):
-    num=[]
+def get_package_data(filename):
+    num = []
     with open(filename, "r") as reader:
         for line in reader.readlines():
             for word in line.split('\n'):
@@ -15,4 +15,4 @@ def get_address_id_weight_package(filename):
 
 
 if __name__ == '__main__':
-    get_address_id_weight_package("data_1.txt")
+    get_package_data("data_1.txt")
