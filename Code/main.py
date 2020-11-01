@@ -3,7 +3,7 @@ from .functions import get_package_data
 from typing import List
 from copy import deepcopy
 
-class GetDataFromFile:
+class DataFromFile:
     def __init__(self, filename):
         self.filename = filename
         self.address_id_weight_package = get_package_data(filename)
@@ -50,7 +50,11 @@ class Storage:
 
 
 class MainStorage:
-    def __init__(self, package_list_: List[Package], truck_list_: List[Truck], storage_list_: List[Storage]):
+    def __init__(self, file: DataFromFile):
+
+        # get_package_num
+        # for
+        #     p = Package(get_package_data(i))
         self.package_list = deepcopy(package_list_)
         self.truck_list = deepcopy(truck_list_)
         self.storage_list = deepcopy(storage_list_)
@@ -58,13 +62,13 @@ class MainStorage:
         del package_list_, truck_list_, storage_list_
 
 
-def objective_function (main_storage: MainStorage) -> float :
+def objective_function(main_storage: MainStorage) -> float:
     # implementacja funkcji celu
     return 0
 
 
 if __name__ == '__main__':
-    getdatafromfile1 = GetDataFromFile("data_1.txt")
+    getdatafromfile1 = DataFromFile("data_1.txt")
     dict_address_id_weight_package = getdatafromfile1.address_id_weight_package
     package_list = []
     for k, v in dict_address_id_weight_package.items():
