@@ -69,7 +69,7 @@ class MainStorage:
 class AlgorythmData:
     def __init__(self, file: str):
         # truck data
-        self.t_type = np.array([1,1,1,1])
+        self.t_type = np.array(t_type_)
         self.t_load = np.array(t_load_)
         self.t_exp_cost = np.array(t_exp_cost_)
         self.t_min_fuel_use = np.array(t_min_fuel_use_)
@@ -86,9 +86,13 @@ class AlgorythmData:
 
 
 def objective_function(data: AlgorythmData) -> float:
-    # implementacja funkcji celu
-
-    return 0
+    for i in range(len(data.x)):
+        for j in range(len(data.x[i])):
+            suma1 += data.t_exp_cost[i]*data.y[i][j]
+            suma2 += data.s_distance[i]*k*data.t_min_fuel_use[i]*y[i][j]
+            suma3 += data.p_weight[i]*data.x[i][j]
+            suma4 += data.s_distance[i]*k*suma3/data.t_load[i]*(data.t_max_fuel_use[i]-data.t_min_fuel_use[i])*data.y[i][j]
+    return suma1+suma2+suma3+suma4
 
 
 if __name__ == '__main__':
