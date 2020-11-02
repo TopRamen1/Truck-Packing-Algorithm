@@ -65,8 +65,20 @@ class MainStorage:
 
         del package_list_, truck_list_, storage_list_
 
+class AlgorythmData:
+    def __init__(self, file: DataFromFile):
+        self.t_type = t_type_
+        self.t_load = t_load_
+        self.t_exp_cost = t_exp_cost_
+        self.t_min_fuel_use = t_min_fuel_use_
+        self.t_max_fuel_use = t_max_fuel_use_
+        self.p_address = p_address_
+        self.p_weight = p_weight_
+        self.s_distance = s_distance_
+        self.s_address = s_address_
 
-def objective_function(main_storage: MainStorage) -> float:
+
+def objective_function(algorythm_data: AlgorythmData) -> float:
     # implementacja funkcji celu
     return 0
 
