@@ -2,6 +2,7 @@
 from .functions import get_package_data
 from typing import List
 from copy import deepcopy
+import numpy as np
 
 class DataFromFile:
     def __init__(self, filename):
@@ -66,20 +67,27 @@ class MainStorage:
         del package_list_, truck_list_, storage_list_
 
 class AlgorythmData:
-    def __init__(self, file: DataFromFile):
-        self.t_type = t_type_
-        self.t_load = t_load_
-        self.t_exp_cost = t_exp_cost_
-        self.t_min_fuel_use = t_min_fuel_use_
-        self.t_max_fuel_use = t_max_fuel_use_
-        self.p_address = p_address_
-        self.p_weight = p_weight_
-        self.s_distance = s_distance_
-        self.s_address = s_address_
+    def __init__(self, file: str):
+        # truck data
+        self.t_type = np.array([1,1,1,1])
+        self.t_load = np.array(t_load_)
+        self.t_exp_cost = np.array(t_exp_cost_)
+        self.t_min_fuel_use = np.array(t_min_fuel_use_)
+        self.t_max_fuel_use = np.array(t_max_fuel_use_)
+        # package data
+        self.p_address = np.array(p_address_)
+        self.p_weight = np.array(p_weight_)
+        # storage data
+        self.s_distance = np.array(s_distance_)
+        self.s_address = np.array(s_address_)
+
+        self.x = np.zeros((len(self.t_type), len(self.p_address)))
+        self.y = np.zeros((len(self.t_type), len(self.s_address)))
 
 
-def objective_function(algorythm_data: AlgorythmData) -> float:
+def objective_function(data: AlgorythmData) -> float:
     # implementacja funkcji celu
+
     return 0
 
 
