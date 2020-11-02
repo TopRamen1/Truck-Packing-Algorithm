@@ -50,14 +50,18 @@ class Storage:
 
 
 class MainStorage:
-    def __init__(self, file: DataFromFile):
+    def __init__(self, package_list_: List[Package], truck_list_: List[Truck], storage_list_: List[Storage]):
 
         # get_package_num
         # for
         #     p = Package(get_package_data(i))
+
         self.package_list = deepcopy(package_list_)
         self.truck_list = deepcopy(truck_list_)
         self.storage_list = deepcopy(storage_list_)
+
+        self.x = [[0 for t in range(len(self.truck_list))] for p in range(len(self.package_list))]
+        self.y = [[0 for t in range(len(self.truck_list))] for s in range(len(self.storage_list))]
 
         del package_list_, truck_list_, storage_list_
 
