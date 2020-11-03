@@ -1,14 +1,14 @@
-
 from functions import get_package_data
 from typing import List
 from copy import deepcopy
 import numpy as np
 
+
 class DataFromFile:
     def __init__(self, filename):
         self.filename = filename
         self.address_id_weight_package = get_package_data(filename)
-        #self.load_id_trucks = fun.get_load_id_trucks(filename)
+        # self.load_id_trucks = fun.get_load_id_trucks(filename)
 
     def __str__(self) -> str:
         return '{self.address_id_weight_package}'.format(self=self)
@@ -27,8 +27,6 @@ class Package:
     @property
     def info_package(self):
         return f"Package no. {self.id}, Address: {self.address}, Weight: {self.weight}"
-
-
 
 
 class Truck:
@@ -58,7 +56,6 @@ class Storage:
 
 class MainStorage:
     def __init__(self, datafromfile: DataFromFile):
-
         # get_package_num
         # for
         #     p = Package(get_package_data(i))
@@ -71,6 +68,7 @@ class MainStorage:
         self.y = [[0 for t in range(len(self.truck_list))] for s in range(len(self.storage_list))]
 
         del package_list_, truck_list_, storage_list_
+
 
 class AlgorythmData:
     def __init__(self, t_load_: np.array, t_exp_cost_, t_min_fuel_use_, t_max_fuel_use_, p_weight_, s_distance_):
@@ -94,12 +92,18 @@ class AlgorythmData:
 
 
 def objective_function(data: AlgorythmData) -> float:
-    suma1 = sum(data.t_exp_cost*data.y, axis=1)
-    suma2 = sum(data.s_distance*k*data.t_min_fuel_use*data.y, axis=1)
-    suma3 = sum(data.p_weight*data.x, axis=0)
-    suma4 = sum(data.s_distance*k*suma3/data.t_load*(data.t_max_fuel_use-data.t_min_fuel_use)*data.y, axis=1)
-    suma5 = sum(suma1+suma2+suma4, axis=0)
-    return suma5
+    k = 5
+    sum1 = np.sum((data.t_exp_cost * data.y.T), axis=1)
+    print(sum1)
+    sum2 = data.s_distance * np.sum((k * data.t_min_fuel_use * data.y.T), axis=1)
+    print(sum2)
+    sum3 = np.sum((data.p_weight * data.x), axis=1)
+    print(sum3)
+    sum4 = data.s_distance * np.sum((k * sum3 / data.t_load * (data.t_max_fuel_use - data.t_min_fuel_use) * data.y.T), axis=1)
+    print(sum4)
+    sum5 = np.sum(sum1 + sum2 + sum4, axis=0)
+    print(sum5)
+    return sum5
 
 
 if __name__ == '__main__':
@@ -111,7 +115,7 @@ if __name__ == '__main__':
     #
     # print(package_list[0])
 
-    alg1 = AlgorythmData([200, 100], [20, 10], [30, 20], [50, 40], [1, 1, 2, 2, 2], [10, 20])
+    alg1 = AlgorythmData([200, 100], [20, 10], [30, 20], [50, 40], [1, 1, 2, 2, 2], [10, 20, 30])
     sum1 = objective_function(alg1)
     print(sum1)
 # class TooManyProductsFoundError(Exception):
