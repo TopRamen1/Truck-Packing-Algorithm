@@ -1,5 +1,5 @@
 
-from .functions import get_package_data
+from functions import get_package_data
 from typing import List
 from copy import deepcopy
 import numpy as np
@@ -23,6 +23,12 @@ class Package:
     def __str__(self) -> str:
         return 'Package no. {self.id}, Address: {self.address}, Weight: {self.weight}'.format(
             self=self)
+
+    @property
+    def info_package(self):
+        return f"Package no. {self.id}, Address: {self.address}, Weight: {self.weight}"
+
+
 
 
 class Truck:
@@ -51,7 +57,7 @@ class Storage:
 
 
 class MainStorage:
-    def __init__(self, package_list_: List[Package], truck_list_: List[Truck], storage_list_: List[Storage]):
+    def __init__(self, datafromfile: DataFromFile):
 
         # get_package_num
         # for
@@ -67,22 +73,24 @@ class MainStorage:
         del package_list_, truck_list_, storage_list_
 
 class AlgorythmData:
-    def __init__(self, file: str):
+    def __init__(self, t_load_: np.array, t_exp_cost_, t_min_fuel_use_, t_max_fuel_use_, p_weight_, s_distance_):
         # truck data
-        self.t_type = np.array(t_type_)
+        # self.t_type = np.array(t_type_)
         self.t_load = np.array(t_load_)
         self.t_exp_cost = np.array(t_exp_cost_)
         self.t_min_fuel_use = np.array(t_min_fuel_use_)
         self.t_max_fuel_use = np.array(t_max_fuel_use_)
         # package data
-        self.p_address = np.array(p_address_)
+        # self.p_address = np.array(p_address_)
         self.p_weight = np.array(p_weight_)
         # storage data
         self.s_distance = np.array(s_distance_)
-        self.s_address = np.array(s_address_)
+        # self.s_address = np.array(s_address_)
 
-        self.x = np.zeros((len(self.t_type), len(self.p_address)))
-        self.y = np.zeros((len(self.t_type), len(self.s_address)))
+        # self.x = np.zeros((len(self.t_type), len(self.p_address)))
+        # self.y = np.zeros((len(self.t_type), len(self.s_address)))
+        self.x = np.array([[1, 0, 1, 0, 0], [0, 1, 0, 1, 1]])
+        self.y = np.array([[0, 0, 1], [1, 1, 0]])
 
 
 def objective_function(data: AlgorythmData) -> float:
@@ -95,14 +103,17 @@ def objective_function(data: AlgorythmData) -> float:
 
 
 if __name__ == '__main__':
-    getdatafromfile1 = DataFromFile("data_1.txt")
-    dict_address_id_weight_package = getdatafromfile1.address_id_weight_package
-    package_list = []
-    for k, v in dict_address_id_weight_package.items():
-        package_list.append(Package(k, v[0], v[1]))
+    # getdatafromfile1 = DataFromFile("data_1.txt")
+    # dict_address_id_weight_package = getdatafromfile1.address_id_weight_package
+    # package_list = []
+    # for k, v in dict_address_id_weight_package.items():
+    #     package_list.append(Package(k, v[0], v[1]))
+    #
+    # print(package_list[0])
 
-    print(package_list[0])
-
+    alg1 = AlgorythmData([200, 100], [20, 10], [30, 20], [50, 40], [1, 1, 2, 2, 2], [10, 20])
+    sum1 = objective_function(alg1)
+    print(sum1)
 # class TooManyProductsFoundError(Exception):
 #     """ Reprezentuje wyjątek związany ze znalezieniem zbyt dużej liczby produktów """
 #
@@ -184,5 +195,3 @@ if __name__ == '__main__':
 #                 return None
 #         except TooManyProductsFoundError:
 #             return None
-#
-# # grupa 1a: Burda (302827), Baradziej (302819)
