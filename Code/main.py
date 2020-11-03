@@ -86,13 +86,12 @@ class AlgorythmData:
 
 
 def objective_function(data: AlgorythmData) -> float:
-    for i in range(len(data.x)):
-        for j in range(len(data.x[i])):
-            suma1 += data.t_exp_cost[i]*data.y[i][j]
-            suma2 += data.s_distance[i]*k*data.t_min_fuel_use[i]*y[i][j]
-            suma3 += data.p_weight[i]*data.x[i][j]
-            suma4 += data.s_distance[i]*k*suma3/data.t_load[i]*(data.t_max_fuel_use[i]-data.t_min_fuel_use[i])*data.y[i][j]
-    return suma1+suma2+suma3+suma4
+    suma1 = sum(data.t_exp_cost*data.y)
+    suma2 = sum(data.s_distance*k*data.t_min_fuel_use*data.y)
+    suma3 = sum(data.p_weight*data.x)
+    suma4 = sum(data.s_distance*k*suma3/data.t_load*(data.t_max_fuel_use-data.t_min_fuel_use)*data.y)
+    suma5 = sum(suma1+suma2+suma4)
+    return suma5
 
 
 if __name__ == '__main__':
