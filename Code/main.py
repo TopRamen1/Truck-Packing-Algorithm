@@ -86,11 +86,11 @@ class AlgorythmData:
 
 
 def objective_function(data: AlgorythmData) -> float:
-    suma1 = sum(data.t_exp_cost*data.y)
-    suma2 = sum(data.s_distance*k*data.t_min_fuel_use*data.y)
-    suma3 = sum(data.p_weight*data.x)
-    suma4 = sum(data.s_distance*k*suma3/data.t_load*(data.t_max_fuel_use-data.t_min_fuel_use)*data.y)
-    suma5 = sum(suma1+suma2+suma4)
+    suma1 = sum(data.t_exp_cost*data.y, axis=1)
+    suma2 = sum(data.s_distance*k*data.t_min_fuel_use*data.y, axis=1)
+    suma3 = sum(data.p_weight*data.x, axis=0)
+    suma4 = sum(data.s_distance*k*suma3/data.t_load*(data.t_max_fuel_use-data.t_min_fuel_use)*data.y, axis=1)
+    suma5 = sum(suma1+suma2+suma4, axis=0)
     return suma5
 
 
