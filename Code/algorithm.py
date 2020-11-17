@@ -1,6 +1,10 @@
-import main.py
+from .main import *
+from typing import List
 class Individual:
-    def __init__(self ):
+    def __init__(self, main_storage: MainStorage):
+        self.truck_list: List = []
+
+
         pass
 
 
