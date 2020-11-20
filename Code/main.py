@@ -3,3 +3,4 @@ from .algorithm_data import *
 
 
 if __name__ == '__main__':
+    pass

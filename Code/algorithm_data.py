@@ -1,5 +1,6 @@
 from typing import List, Tuple
 import numpy as np
+from copy import deepcopy
 
 
 class DataFromFile:
@@ -107,7 +108,10 @@ class Storage:
 #####################################################################################################################
 # TODO: to co ponizej:
 class MainStorage:
-    def __init__(self, data_package_: List[Tuple[int, int, float]]):
+    def __init__(self, package_list: List[Package], truck_list: List[Truck], storage_list: List[Storage]):
+        self.package_list = deepcopy(package_list)
+        self.truck_list = deepcopy(truck_list)
+        self.storage_list = deepcopy(storage_list)
 
         pass
 
