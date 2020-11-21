@@ -22,7 +22,7 @@ class DataFromFile:
         address and weight """
         data_package = []
         with open(self.filename1, "r") as reader:
-            id_p = 1
+            id_p = 0
             for line in reader.readlines():
                 data_temp = line.strip()
                 address, weight = data_temp.split(':')
@@ -36,7 +36,7 @@ class DataFromFile:
         exploitation, minimal combustion, maximum combustion """
         truck_package = []
         with open(self.filename2, "r") as reader:
-            id_t = 1
+            id_t = 0
             for line in reader.readlines():
                 data_temp = line.strip()
                 type_t, load, exp_cost, min_fuel_use, max_fuel_use = data_temp.split(':')
@@ -50,7 +50,7 @@ class DataFromFile:
         distance from main storage """
         storage_package = []
         with open(self.filename3, "r") as reader:
-            id_s = 1
+            id_s = 0
             for line in reader.readlines():
                 data_temp = line.strip()
                 address, distance = data_temp.split(':')

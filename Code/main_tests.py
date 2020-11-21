@@ -1,7 +1,7 @@
 import unittest
 from collections import Counter
 from servers import ListServer, Product, Client, MapServer, TooManyProductsFoundError
-
+#  unittest.main()
 
 if __name__ == '__main__':
 #  unittest.main()
