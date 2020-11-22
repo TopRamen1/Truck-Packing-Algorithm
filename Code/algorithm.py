@@ -29,7 +29,7 @@ def genetic_alg(main_storage: MainStorage):
 # TODO: funkcja celu
 def obj_fcn(data_mst: MainStorage, data_ind: Individual):
     act_truck_pos = [i for i, m in enumerate(data_ind.ch_t) if m != -1]  # truck's id who has defined storage
-    act_package_pos = [j for j, p in enumerate(data_ind.ch_t)]  # package's id
+    act_package_pos = [j for j, p in enumerate(data_ind.ch_p)]  # package's id
     sum_1, sum_2, sum_3 = 0, 0, 0
 
     # sum_1:
@@ -57,8 +57,35 @@ def obj_fcn(data_mst: MainStorage, data_ind: Individual):
 
 
 # TODO: ograniczenia
-def chcek_lims(data: MainStorage):
-    return True
+class NewException:
+    def __init__(self, x):
+        self.x = x
+    def __str__(self):
+        return "Przekroczono warunek ograniczający"
+
+def check_lims(data_mst: MainStorage, data_ind: Individual):
+    act_package_pos = [j for j, p in enumerate(data_ind.ch_p)]
+    sum_weights = 0
+    for i in data_mst.list_of_packages:
+        sum_weights += i.weight
+    sum_loads = 0
+    for j in data_mst.list_of_trucks:
+        sum_loads += j.load
+    if sum_weights > sum_loads:
+        raise NewException()
+    for i in act_truck_pos:
+        sum_weights = 0
+        for j in act_package_pos:
+            if i == data_ind.ch_p[j]:
+                sum_weights += data_mst.list_of_packages[j].weight
+        if sum_weights > data_mst.list_of_trucks[i].load:
+            raise NewException()
+
+
+
+
+
+
 
 
 def random_chromosome(data: MainStorage):
