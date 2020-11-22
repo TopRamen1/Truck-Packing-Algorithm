@@ -65,6 +65,7 @@ class NewException:
 
 def check_lims(data_mst: MainStorage, data_ind: Individual):
     act_package_pos = [j for j, p in enumerate(data_ind.ch_p)]
+    act_truck_pos = [i for i, m in enumerate(data_ind.ch_t) if m != -1]
     sum_weights = 0
     for i in data_mst.list_of_packages:
         sum_weights += i.weight
