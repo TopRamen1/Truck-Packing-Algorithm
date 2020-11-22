@@ -17,6 +17,9 @@ class Individual:
     def __str__(self):
         return str(self.ch_t) + ' ' + str(self.ch_p)
 
+    def get_ch_len(self):
+        return len(self.ch_t) + len(self.ch_p)
+
 
 def genetic_alg(main_storage: MainStorage):
     """    """
@@ -51,30 +54,31 @@ def random_chromosome(data: MainStorage):
 
     while package_ids:
         for p_to_add in ids_by_address:
-            if not truck_ids:
-                print("to many packages error")
-                return [0], [0]
+            while p_to_add:
+                if not truck_ids:
+                    print("to many packages error")
+                    return [0], [0]
 
-            t = data.list_of_trucks[random.choice(truck_ids)]  # random truck
-            truck_ids.remove(t.id)
+                t = data.list_of_trucks[random.choice(truck_ids)]  # random truck
+                truck_ids.remove(t.id)
 
-            p = data.list_of_packages[random.choice(p_to_add)]  # random package
+                p = data.list_of_packages[random.choice(p_to_add)]  # random package
 
-            ch_t[t.id] = p.address  # adding truck address to chromosome
+                ch_t[t.id] = p.address  # adding truck address to chromosome
 
-            weight_sum = 0
-            while t.load >= weight_sum + p.weight:
-                weight_sum += p.weight
+                weight_sum = 0
+                while t.load >= weight_sum + p.weight:
+                    weight_sum += p.weight
 
-                ch_p[p.id] = t.id   # adding truck id for package in chromosome
+                    ch_p[p.id] = t.id   # adding truck id for package in chromosome
 
-                package_ids.remove(p.id)
-                p_to_add.remove(p.id)
+                    package_ids.remove(p.id)
+                    p_to_add.remove(p.id)
 
-                if p_to_add:
-                    p = data.list_of_packages[random.choice(p_to_add)]
-                else:
-                    break
+                    if p_to_add:
+                        p = data.list_of_packages[random.choice(p_to_add)]
+                    else:
+                        break
 
     return ch_t, ch_p
 

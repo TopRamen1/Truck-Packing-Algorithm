@@ -1,12 +1,48 @@
 import unittest
-from collections import Counter
-from servers import ListServer, Product, Client, MapServer, TooManyProductsFoundError
-#  unittest.main()
+from algorithm import init_pop, Individual
+from algorithm_data import MainStorage, DataFromFile
+
+
+class AlgorithmTests(unittest.TestCase):
+    def test_init_pop_1(self):
+        n = 3
+
+        data = DataFromFile("data/test1/p.txt", "data/test1/t.txt", "data/test1/s.txt")
+
+        storage = MainStorage(data)
+
+        print(storage)
+
+        pop = init_pop(storage, n)
+
+        for i in pop:
+            print(i)
+
+        self.assertEqual(len(pop), n)
+        for i in pop:
+            self.assertEqual(8, i.get_ch_len())
+
+    def test_init_pop_2(self):
+        n = 3
+
+        data = DataFromFile("data/test2/p.txt", "data/test2/t.txt", "data/test2/s.txt")
+
+        storage = MainStorage(data)
+
+        print(storage)
+
+        pop = init_pop(storage, n)
+
+        for i in pop:
+            print(i)
+
+        self.assertEqual(len(pop), n)
+        for i in pop:
+            self.assertEqual(17, i.get_ch_len())
+
 
 if __name__ == '__main__':
-#  unittest.main()
-
-
+    unittest.main()
 
 # server_types = (ListServer, MapServer)
 #
@@ -77,6 +113,5 @@ if __name__ == '__main__':
 #             client = Client(server)
 #             self.assertEqual(None, client.get_total_price(2))
 #
- []
 
 # grupa 1a: Burda (302827), Baradziej (302819)
