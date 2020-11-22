@@ -38,7 +38,8 @@ def obj_fcn(data_mst: MainStorage, data_ind: Individual):
 
     # sum_2:
     for i in act_truck_pos:
-        sum_2 += data_mst.list_of_storages[data_ind.ch_t[i]].distance * data_mst.k * data_mst.list_of_trucks[i].min_fuel_use
+        sum_2 += data_mst.list_of_storages[data_ind.ch_t[i]].distance * data_mst.k * \
+                 data_mst.list_of_trucks[i].min_fuel_use
 
     # sum_3:
     for i in act_truck_pos:
@@ -46,7 +47,9 @@ def obj_fcn(data_mst: MainStorage, data_ind: Individual):
         for j in act_package_pos:
             if i == data_ind.ch_p[j]:
                 sum_packages += data_mst.list_of_packages[j].weight
-        sum_3 += data_mst.list_of_storages[data_ind.ch_t[i]].distance * data_mst.k * (data_mst.list_of_trucks[i].max_fuel_use - data_mst.list_of_trucks[i].min_fuel_use) * (sum_packages / data_mst.list_of_trucks[i].load)
+        sum_3 += data_mst.list_of_storages[data_ind.ch_t[i]].distance * data_mst.k * \
+                 (data_mst.list_of_trucks[i].max_fuel_use - data_mst.list_of_trucks[i].min_fuel_use) * \
+                 (sum_packages / data_mst.list_of_trucks[i].load)
 
     final_result = sum_1 + sum_2 + sum_3
 
