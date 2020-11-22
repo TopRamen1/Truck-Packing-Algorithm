@@ -107,8 +107,7 @@ class Storage:
     def info_storage(self):
         return f"Storage no. {self.id}, Address: {self.address}, Distance: {self.distance}".format(self=self)
 
-#####################################################################################################################
-# TODO: to co ponizej:
+
 class MainStorage:
     def __init__(self, data_init_: DataFromFile):
         data_init = data_init_
@@ -118,14 +117,15 @@ class MainStorage:
         self.list_of_packages = []
         self.list_of_trucks = []
         self.list_of_storages = []
+        self.k = 4.5 # fuel price
         for i in data_package_:
-            new_package = Package(i[0],i[1],i[2])
+            new_package = Package(i[0], i[1], i[2])
             self.list_of_packages.append(new_package)
         for i in truck_package_:
-            new_truck = Truck(i[0],i[1],i[2],i[3],i[4],i[5])
+            new_truck = Truck(i[0], i[1], i[2], i[3], i[4], i[5])
             self.list_of_trucks.append(new_truck)
         for i in storage_package_:
-            new_storage = Package(i[0],i[1],i[2])
+            new_storage = Storage(i[0], i[1], i[2])
             self.list_of_storages.append(new_storage)
 
     def __iter__(self):
@@ -134,53 +134,8 @@ class MainStorage:
     def __str__(self):
         return f"Number of packages: {len(self.list_of_packages)}\nNumber of trucks: {len(self.list_of_trucks)}\nNumber of storages: {len(self.list_of_storages)}".format(self=self)
 
-
     @property
     def info_main_storage(self):
         return f"Number of packages: {len(self.list_of_packages)}\nNumber of trucks: {len(self.list_of_trucks)}\nNumber of storages: {len(self.list_of_storages)}".format(self=self)
 
-class AlgorythmData:
-    def __init__(self, t_load_: np.array, t_exp_cost_, t_min_fuel_use_, t_max_fuel_use_, p_weight_, s_distance_):
-        # truck data
-        # self.t_type = np.array(t_type_)
-        self.t_load = np.array(t_load_)
-        self.t_exp_cost = np.array(t_exp_cost_)
-        self.t_min_fuel_use = np.array(t_min_fuel_use_)
-        self.t_max_fuel_use = np.array(t_max_fuel_use_)
-        # package data
-        # self.p_address = np.array(p_address_)
-        self.p_weight = np.array(p_weight_)
-        # storage data
-        self.s_distance = np.array(s_distance_)
-        # self.s_address = np.array(s_address_)
-
-        # self.x = np.zeros((len(self.t_type), len(self.p_address)))
-        # self.y = np.zeros((len(self.t_type), len(self.s_address)))
-        self.x = np.array([[1, 0, 1, 0, 0], [0, 1, 0, 1, 1]])
-        self.y = np.array([[0, 0, 1], [1, 1, 0]])
-
-
-def objective_function(data: AlgorythmData) -> float:
-    k = 5
-    sum1 = np.sum((data.t_exp_cost * data.y.T), axis=1)
-    print(sum1)
-    sum2 = data.s_distance * np.sum((k * data.t_min_fuel_use * data.y.T), axis=1)
-    print(sum2)
-    sum3 = np.sum((data.p_weight * data.x), axis=1)
-    print(sum3)
-    sum4 = data.s_distance * np.sum((k * sum3 / data.t_load * (data.t_max_fuel_use - data.t_min_fuel_use) * data.y.T),
-                                    axis=1)
-    print(sum4)
-    sum5 = np.sum(sum1 + sum2 + sum4, axis=0)
-    print(sum5)
-    return sum5
-
-
-if __name__ == '__main__':
-    datas = DataFromFile("data_package1.txt", "data_truck1.txt", "data_storage1.txt")
-    main2 = MainStorage(datas)
-    for package in main2:
-        print("Package ID: {}, Package address: {}, Package weight: {}".format(package.id,package.address,package.weight))
-    print(main2.list_of_packages[0])
-    print(main2)
 
