@@ -4,11 +4,12 @@ import random
 
 
 class Individual:
-    def __init__(self, ch_t: List[int], ch_p: List[int], p = 1):
+    def __init__(self, ch_t: List[int], ch_p: List[int], p: float = 0):
         """
-        Class Fields: two parts of chromosome
-        ch_t - part dedicated to showing which truck goes where
-        ch_p - part representing which package goes to which truck
+        Calss containing individual chromosome and rating
+        :param ch_t: part dedicated to showing which truck goes where
+        :param ch_p: part representing which package goes to which truck
+        :param p: probability of choosing this individual
         """
 
         self.ch_t = ch_t
@@ -16,9 +17,8 @@ class Individual:
 
         self.p = p
 
-
     def __str__(self):
-        return str(self.ch_t) + ' ' + str(self.ch_p)
+        return str(self.ch_t) + ' ' + str(self.ch_p) + ' ' + str(self.p)
 
     def get_ch_len(self):
         return len(self.ch_t) + len(self.ch_p)
@@ -29,7 +29,6 @@ def genetic_alg(main_storage: MainStorage):
     pass
 
 
-# TODO: funkcja celu
 def obj_fcn(data_mst: MainStorage, data_ind: Individual):
     act_truck_pos = [i for i, m in enumerate(data_ind.ch_t) if m != -1]  # truck's id who has defined storage
     act_package_pos = [j for j, p in enumerate(data_ind.ch_p)]  # package's id
@@ -59,7 +58,6 @@ def obj_fcn(data_mst: MainStorage, data_ind: Individual):
     return final_result
 
 
-# TODO: ograniczenia
 class NewException:
     def __init__(self):
         pass
@@ -112,7 +110,10 @@ def check_lims(data_mst: MainStorage, data_ind: Individual):
 
 
 def random_chromosome(data: MainStorage):
-    """ Generates a random Chromosome for individual """
+    """
+    Generates a random Chromosome for individual
+    :return: random chromosome
+    """
     # id lists for calculations
     storage_ids = list(range(0, len(data.list_of_storages)))
     truck_ids = list(range(0, len(data.list_of_trucks)))
@@ -162,6 +163,7 @@ def init_pop(data: MainStorage, pop_size: int) -> List[Individual]:
     """
     Initialize population
     Function witch initializes population and returns it as a list of Indivituals
+    :return: random population
     """
     population = []
 
@@ -172,22 +174,57 @@ def init_pop(data: MainStorage, pop_size: int) -> List[Individual]:
     return population
 
 
-# TODO: Funkcja oceniająca osobniki (na podstawie funkcji celu)
-def fitness(data: MainStorage):
-    pass
+def fitness(data: MainStorage, pop: List[Individual]):
+    """
+    Calculate probability for every individual using objective fcn
+    :return: rated population
+    """
+    sum1 = 0
+    sum2 = 0
+    for i in pop:
+        sum1 += obj_fcn(data, i)
+
+    for i in pop:
+        i.p = obj_fcn(data, i) / sum1
+        sum2 += i.p
+
+    return pop
 
 
+def selection(data: MainStorage, pop: List[Individual]):
+    """
+    Select individuals based on probability calculated by fitness
+    :return: population to reproduce
+    """
+    new_pop = []
+    while len(new_pop) < len(pop):
+        r = random.random()
+        prob = 0
+        for i in pop:
+            prob += i.p
+            if prob > r:
+                new_pop.append(i)
+                break
+
+    return new_pop
+
+# TODO: krzyżowanie
 def crossover(data: MainStorage):
     pass
 
 
+# TODO: Mutacja
 def mutation(data: MainStorage):
     pass
 
 
-# TODO: Wybiera na podstawie oceny osobniki do mutacji
-def selection():
-    pass
+def print_pop(pop: List[Individual], text: str):
+    print(text)
+
+    for i in pop:
+        print(i)
+
+    print('\n')
 
 
 if __name__ == '__main__':

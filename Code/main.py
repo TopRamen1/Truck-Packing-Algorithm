@@ -1,6 +1,6 @@
 from algorithm_data import DataFromFile
 from algorithm_data import MainStorage
-from algorithm import init_pop
+from algorithm import init_pop, fitness, selection, print_pop
 
 if __name__ == '__main__':
 
@@ -23,10 +23,14 @@ if __name__ == '__main__':
 
     print(storage)
 
-    pop = init_pop(storage, 5)
+    pop = init_pop(storage, 8)
 
-    for i in pop:
-        print(i)
+    print_pop(pop, "Populacja po inicjalizacji:")
 
+    pop = fitness(storage, pop)
 
+    print_pop(pop, "Populacja po ocenie:")
 
+    pop = selection(storage, pop)
+
+    print_pop(pop, "Populacja po selekcji:")
