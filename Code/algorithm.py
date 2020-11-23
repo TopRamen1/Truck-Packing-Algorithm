@@ -4,7 +4,7 @@ import random
 
 
 class Individual:
-    def __init__(self, ch_t: List[int], ch_p: List[int]):
+    def __init__(self, ch_t: List[int], ch_p: List[int], p = 1):
         """
         Class Fields: two parts of chromosome
         ch_t - part dedicated to showing which truck goes where
@@ -13,6 +13,9 @@ class Individual:
 
         self.ch_t = ch_t
         self.ch_p = ch_p
+
+        self.p = p
+
 
     def __str__(self):
         return str(self.ch_t) + ' ' + str(self.ch_p)
@@ -65,16 +68,16 @@ class NewException:
 
     @property
 
-    def lim1():
+    def lim1(self):
         return 'Przekroczono pierwszy warunek'
 
-    def lim2():
+    def lim2(self):
         return 'Przekroczono drugi warunek'
 
-    def lim3():
+    def lim3(self):
         return 'Przekroczono trzeci warunek'
 
-    def lim4():
+    def lim4(self):
         return 'Przekroczono czwarty warunek'
 
 
@@ -96,12 +99,6 @@ def check_lims(data_mst: MainStorage, data_ind: Individual):
                 sum_weights += data_mst.list_of_packages[j].weight
         if sum_weights > data_mst.list_of_trucks[i].load:
             raise NewException.lim2
-
-
-
-
-
-
 
 
 def random_chromosome(data: MainStorage):

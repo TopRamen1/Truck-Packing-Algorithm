@@ -17,22 +17,16 @@ if __name__ == '__main__':
         print(i)
 
     """
-    data = DataFromFile("data/test2/p.txt", "data/test2/t.txt", "data/test2/s.txt")
+    data = DataFromFile("data/test2/p.txt", "data/test2/t.txt", "data/test2/s.txt", 2)
 
     storage = MainStorage(data)
 
     print(storage)
 
-    pop = init_pop(storage, 3)
+    pop = init_pop(storage, 5)
 
     for i in pop:
         print(i)
-
-
-
-
-
-
 
 
 

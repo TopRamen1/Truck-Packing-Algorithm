@@ -2,19 +2,19 @@ from typing import List, Tuple
 
 
 class DataFromFile:
-    def __init__(self, filename_p: str, filename_t: str, filename_s: str, id_dataset_: List[int]):
+    def __init__(self, filename_p: str, filename_t: str, filename_s: str, id_dataset_: int):
         self.filename1 = filename_p
         self.filename2 = filename_t
         self.filename3 = filename_s
-        self.id_dataset = id_dataset_[-1]
+        self.id_dataset = id_dataset_
 
     def __str__(self) -> str:
         return f"ID of dataset: {self.id_dataset} -> Names: '{self.filename1},'{self.filename2}','{self.filename3}'" \
             .format(self=self)
 
-    @classmethod
-    def from_file_id(cls, *args):
-        return cls(*args, [int(i) for i in args[0] if i.isdigit()])
+    # @classmethod
+    # def from_file_id(cls, *args):
+    #     return cls(*args, [int(i) for i in args[0] if i.isdigit()])
 
     def get_package_data(self) -> List[Tuple[int, int, float]]:
         """ Extract data from .txt file into list of tuples, tuples contain information about packages: ID,
