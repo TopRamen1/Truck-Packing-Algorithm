@@ -58,10 +58,25 @@ def obj_fcn(data_mst: MainStorage, data_ind: Individual):
 
 # TODO: ograniczenia
 class NewException:
-    def __init__(self, x):
-        self.x = x
+    def __init__(self):
+        pass
     def __str__(self):
         return "Przekroczono warunek ograniczający"
+
+    @property
+
+    def lim1():
+        return 'Przekroczono pierwszy warunek'
+
+    def lim2():
+        return 'Przekroczono drugi warunek'
+
+    def lim3():
+        return 'Przekroczono trzeci warunek'
+
+    def lim4():
+        return 'Przekroczono czwarty warunek'
+
 
 def check_lims(data_mst: MainStorage, data_ind: Individual):
     act_package_pos = [j for j, p in enumerate(data_ind.ch_p)]
@@ -73,14 +88,14 @@ def check_lims(data_mst: MainStorage, data_ind: Individual):
     for j in data_mst.list_of_trucks:
         sum_loads += j.load
     if sum_weights > sum_loads:
-        raise NewException()
+        raise NewException.lim1
     for i in act_truck_pos:
         sum_weights = 0
         for j in act_package_pos:
             if i == data_ind.ch_p[j]:
                 sum_weights += data_mst.list_of_packages[j].weight
         if sum_weights > data_mst.list_of_trucks[i].load:
-            raise NewException()
+            raise NewException.lim2
 
 
 
