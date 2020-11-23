@@ -82,6 +82,8 @@ def check_lims(data_mst: MainStorage, data_ind: Individual):
     act_package_pos = [j for j, p in enumerate(data_ind.ch_p)]
     act_truck_pos = [i for i, m in enumerate(data_ind.ch_t) if m != -1]
     sum_weights = 0
+
+    """ Checking the first limit """
     for i in data_mst.list_of_packages:
         sum_weights += i.weight
     sum_loads = 0
@@ -89,6 +91,8 @@ def check_lims(data_mst: MainStorage, data_ind: Individual):
         sum_loads += j.load
     if sum_weights > sum_loads:
         raise NewException.lim1
+
+    """ Checking the second limit """
     for i in act_truck_pos:
         sum_weights = 0
         for j in act_package_pos:
@@ -97,10 +101,10 @@ def check_lims(data_mst: MainStorage, data_ind: Individual):
         if sum_weights > data_mst.list_of_trucks[i].load:
             raise NewException.lim2
 
-
-
-
-
+    """ Checking the third limit """
+    for i in data_ind.ch_p:
+        if i == -1:
+            raise NewException.lim3
 
 
 
