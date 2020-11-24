@@ -4,28 +4,56 @@ import random
 
 
 class Individual:
-    def __init__(self, ch_t: List[int], ch_p: List[int], p: float = 0):
+    """
+    Class containing individual chromosome and rating
+    """
+    def __init__(self, ch_t: List[int], ch_p: List[int], prob: float = 0):
         """
-        Calss containing individual chromosome and rating
         :param ch_t: part dedicated to showing which truck goes where
         :param ch_p: part representing which package goes to which truck
-        :param p: probability of choosing this individual
+        :param prob: probability of choosing this individual
         """
 
         self.ch_t = ch_t
         self.ch_p = ch_p
 
-        self.p = p
+        self.prob = prob
 
     def __str__(self):
-        return str(self.ch_t) + ' ' + str(self.ch_p) + ' ' + str(self.p)
+        return str(self.ch_t) + ' ' + str(self.ch_p) + ' ' + str(self.prob)
 
     def get_ch_len(self):
         return len(self.ch_t) + len(self.ch_p)
 
 
-def genetic_alg(main_storage: MainStorage):
-    """    """
+def genetic_alg(data: MainStorage, it_num: int):
+    """
+
+    """
+    pop = init_pop(data, 8)
+
+    print_pop(pop, "Populacja po inicjalizacji:")
+
+    pop = fitness(data, pop)
+
+    pop = selection(data, pop)
+
+    i = 0
+
+    while i < it_num:
+
+        pop = crossover(data, pop)
+
+        pop = mutation(data, pop)
+
+        print_pop(pop, "Populacja po ocenie:")
+
+        pop = selection(data, pop)
+
+        print_pop(pop, "Populacja po selekcji:")
+
+        i += 1
+
     pass
 
 
@@ -61,11 +89,11 @@ def obj_fcn(data_mst: MainStorage, data_ind: Individual):
 class NewException:
     def __init__(self):
         pass
+
     def __str__(self):
         return "Przekroczono warunek ograniczający"
 
     @property
-
     def lim1(self):
         return 'Przekroczono pierwszy warunek'
 
@@ -106,7 +134,6 @@ def check_lims(data_mst: MainStorage, data_ind: Individual):
     for i in data_ind.ch_p:
         if i == -1:
             raise NewException.lim3
-
 
 
 def random_chromosome(data: MainStorage):
@@ -185,8 +212,8 @@ def fitness(data: MainStorage, pop: List[Individual]):
         sum1 += obj_fcn(data, i)
 
     for i in pop:
-        i.p = obj_fcn(data, i) / sum1
-        sum2 += i.p
+        i.prob = obj_fcn(data, i) / sum1
+        sum2 += i.prob
 
     return pop
 
@@ -201,21 +228,27 @@ def selection(data: MainStorage, pop: List[Individual]):
         r = random.random()
         prob = 0
         for i in pop:
-            prob += i.p
+            prob += i.prob
             if prob > r:
                 new_pop.append(i)
                 break
 
     return new_pop
 
-# TODO: krzyżowanie
-def crossover(data: MainStorage):
-    pass
+
+# TODO: krzyżowanie - KAMIL
+def crossover(data: MainStorage, pop: List[Individual]):
+    return pop
 
 
-# TODO: Mutacja
-def mutation(data: MainStorage):
-    pass
+# TODO: naprawa populacji - NICOLAS
+def fix_pop(data: MainStorage, pop: List[Individual]):
+    return pop
+
+
+# TODO: Mutacja - WOJTEK
+def mutation(data: MainStorage, pop: List[Individual]):
+    return pop
 
 
 def print_pop(pop: List[Individual], text: str):
