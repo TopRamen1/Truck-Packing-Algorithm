@@ -1,5 +1,6 @@
 from algorithm_data import DataFromFile
 from algorithm_data import MainStorage
+
 from algorithm import init_pop, fitness, selection, print_pop, crossover
 
 if __name__ == '__main__':
@@ -17,7 +18,6 @@ if __name__ == '__main__':
 
     """
     data = DataFromFile("data/test2/p.txt", "data/test2/t.txt", "data/test2/s.txt", 2)
-
     storage = MainStorage(data)
 
     pop = init_pop(storage, 8)

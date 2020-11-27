@@ -97,6 +97,7 @@ class NewException:
     def lim1(self):
         return 'Przekroczono pierwszy warunek'
 
+    @property
     def lim2(self):
         return 'Przekroczono drugi warunek'
 
@@ -105,6 +106,10 @@ class NewException:
 
     def lim4(self):
         return 'Przekroczono czwarty warunek'
+
+
+# class ExceptionCr(Exception):
+#     """The number of cuts must be equal to the number of storages where the packages are going"""
 
 
 def check_lims(data_mst: MainStorage, data_ind: Individual):
@@ -240,67 +245,67 @@ def selection(data: MainStorage, pop: List[Individual]):
 def crossover(data: MainStorage, pop: List[Individual], num_cross_points: List[int]) -> List[Individual]:
     print_pop(pop, "Population to crossover:")
 
-    list_divisors: List[List] = [[] for i in range(len(num_cross_points))]  # list of list where every list has
-    # divisors of right side of chromosome: ch_p
+    # list of list where every list has divisors of right side of chromosome: ch_p
+    list_divisors: List[List] = [[] for i in range(len(num_cross_points))]
+    # dict of number of used storages and number of individual packages in used storages
     dict_of_used_p_s = data.get_used_sto_pack
-    print(dict_of_used_p_s)
-    if len(num_cross_points) != len(dict_of_used_p_s):
-        pass
-        # TODO throw exception
+    ch_p1 = []  # empty chromosome
+    rand_lst1 = []  # shows which part of divided chromosome stay from parent 1
+    rand_lst2 = []  # shows which part of divided chromosome stay from parent 2
 
+    # generate divisors for every part of chromosome (ch_p), parts are the number of storages
     for key, value in dict_of_used_p_s.items():
         val1 = int(value / num_cross_points[key])
         list_divisors[key].extend([val1] * num_cross_points[key])
         if value % num_cross_points[key] != 0:
             list_divisors[key].append(value % num_cross_points[key])
 
-    rand_lst1 = []  # shows which part of divided chromosome stay from parent 1
-    rand_lst2 = []  # shows which part of divided chromosome stay from parent 2
+    # generate lists which tells you which genes to take from a particular parent
     for i, j in enumerate(list_divisors):
         temp = random.sample(range(len(j)), int(num_cross_points[i] / 2))
         rand_lst1.append(temp)
         temp2 = []
         for p, k in enumerate(j):
+            ch_p1.append([] * k)
             if p not in temp:
                 temp2.append(p)
         rand_lst2.append(temp2)
-    del temp, temp2
+    del temp, temp2, val1
+    ch_p2 = ch_p1[:]
 
-    empty_ch_p1 = []
-    for i, j in enumerate(list_divisors):
-        for p, k in enumerate(j):
-            empty_ch_p1.append([] * k)
-    print(empty_ch_p1)
-    empty_ch_p2 = empty_ch_p1[:]
-    print(empty_ch_p2)
+# DO TESTOWANIA ODKOMENTUJ
+    # print(ch_p1)
+    # print(ch_p2)
+    #
+    # print("lista diviosrs", list_divisors)
+    # print(rand_lst1)
+    # print(rand_lst2)
 
-    print("lista diviosrs", list_divisors)
-    print(rand_lst1)
-    print(rand_lst2)
-
+    # TODO: robienie tego automatycznie:
     pos = [0, 13, 18]
     cou = [0, 5, 8, 10]
+    # generate children from chromosome of individual parents
     for num, it in enumerate(list_divisors):
         for i in rand_lst1[num]:
             pos_t = pos[num]
-            if it[i] < it[i-1]:
-                empty_ch_p1[i + cou[num]] = pop[0].ch_p[pos[num+1]-1]
-                empty_ch_p2[i + cou[num]] = pop[1].ch_p[pos[num+1]-1]
+            if it[i] < it[i - 1]:
+                ch_p1[i + cou[num]] = pop[0].ch_p[pos[num + 1] - 1]
+                ch_p2[i + cou[num]] = pop[1].ch_p[pos[num + 1] - 1]
             else:
-                empty_ch_p1[i + cou[num]] = pop[0].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
-                empty_ch_p2[i + cou[num]] = pop[1].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
+                ch_p1[i + cou[num]] = pop[0].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
+                ch_p2[i + cou[num]] = pop[1].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
 
         for i in rand_lst2[num]:
             pos_t = pos[num]
-            if it[i] < it[i-1]:
-                empty_ch_p1[i + cou[num]] = pop[1].ch_p[pos[num+1] - 1]
-                empty_ch_p2[i + cou[num]] = pop[0].ch_p[pos[num+1] - 1]
+            if it[i] < it[i - 1]:
+                ch_p1[i + cou[num]] = pop[1].ch_p[pos[num + 1] - 1]
+                ch_p2[i + cou[num]] = pop[0].ch_p[pos[num + 1] - 1]
             else:
-                empty_ch_p1[i + cou[num]] = pop[1].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
-                empty_ch_p2[i + cou[num]] = pop[0].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
+                ch_p1[i + cou[num]] = pop[1].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
+                ch_p2[i + cou[num]] = pop[0].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
 
-    print(empty_ch_p1)
-    print(empty_ch_p2)
+    print(ch_p1)
+    print(ch_p2)
 
     # children = (Individual(ch_t, ch_p), Individual(ch_t, ch_p))
 

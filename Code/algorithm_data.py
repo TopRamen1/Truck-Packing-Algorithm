@@ -154,7 +154,7 @@ class MainStorage:
                 if p.address == s:
                     counters[0][s] += 1
 
-        dict_of_used_p_s = {} # dict of number of used storages and counters :Dict: {storage: counter}
+        dict_of_used_p_s = {}  # dict of number of used storages and counters :Dict: {storage: counter}
         counters = counters[0][:]  # list of numbers of package's addresses
         for s in list_of_used_storages:
             for i, c in enumerate(counters):
