@@ -266,11 +266,14 @@ def crossover(data: MainStorage, pop: List[Individual], num_cross_points: List[i
         rand_lst2.append(temp2)
     del temp, temp2
 
-    empty_ch_p = []
+    empty_ch_p1 = []
     for i, j in enumerate(list_divisors):
         for p, k in enumerate(j):
-            empty_ch_p.append([] * k)
-    print(empty_ch_p)
+            empty_ch_p1.append([] * k)
+    print(empty_ch_p1)
+    empty_ch_p2=empty_ch_p1[:]
+    print(empty_ch_p2)
+
     print("lista diviosrs",list_divisors)
     print(rand_lst1)
     print(rand_lst2)
@@ -278,19 +281,20 @@ def crossover(data: MainStorage, pop: List[Individual], num_cross_points: List[i
     pos=[0, 12, 14]
     cou=[0, 4, 6, 8]
     for num, it in enumerate(list_divisors):
-        print("num", num)
         for i in rand_lst1[num]:
             pos_t = pos[num]
-            print(pos_t)
-            empty_ch_p[i+cou[num]] = pop[0].ch_p[(pos_t+(it[i]*i)):(pos_t+(it[i]*(i+1)))]
+            empty_ch_p1[i+cou[num]] = pop[0].ch_p[(pos_t+(it[i]*i)):(pos_t+(it[i]*(i+1)))]
+            empty_ch_p2[i+cou[num]] = pop[1].ch_p[(pos_t+(it[i]*i)):(pos_t+(it[i]*(i+1)))]
+
         for i in rand_lst2[num]:
             pos_t = pos[num]
-            print(pos_t)
-            empty_ch_p[i + cou[num]] = pop[1].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
+            empty_ch_p1[i + cou[num]] = pop[1].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
+            empty_ch_p2[i+cou[num]] = pop[0].ch_p[(pos_t+(it[i]*i)):(pos_t+(it[i]*(i+1)))]
 
-    print(empty_ch_p)
+    print(empty_ch_p1)
+    print(empty_ch_p2)
 
-    # ch_p =
+
     # children = (Individual(ch_t, ch_p), Individual(ch_t, ch_p))
 
     return 0
