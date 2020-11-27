@@ -3,7 +3,6 @@ from algorithm_data import MainStorage
 from algorithm import init_pop, fitness, selection, print_pop, crossover
 
 if __name__ == '__main__':
-
     """
     data = DataFromFile("data/test1/p.txt", "data/test1/t.txt", "data/test1/s.txt")
 
@@ -32,5 +31,5 @@ if __name__ == '__main__':
     pop = selection(storage, pop)
 
     # print_pop(pop, "Populacja po selekcji:")
-
-    new_pop = crossover(storage, pop, [3, 1, 1])
+    pop = pop[0:2]
+    new_pop = crossover(storage, pop, [4, 2, 2])

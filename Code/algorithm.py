@@ -7,6 +7,7 @@ class Individual:
     """
     Class containing individual chromosome and rating
     """
+
     def __init__(self, ch_t: List[int], ch_p: List[int], prob: float = 0):
         """
         :param ch_t: part dedicated to showing which truck goes where
@@ -41,7 +42,6 @@ def genetic_alg(data: MainStorage, it_num: int):
     i = 0
 
     while i < it_num:
-
         pop = crossover(data, pop)
 
         pop = mutation(data, pop)
@@ -173,7 +173,7 @@ def random_chromosome(data: MainStorage):
                 while t.load >= weight_sum + p.weight:
                     weight_sum += p.weight
 
-                    ch_p[p.id] = t.id   # adding truck id for package in chromosome
+                    ch_p[p.id] = t.id  # adding truck id for package in chromosome
 
                     package_ids.remove(p.id)
                     p_to_add.remove(p.id)
@@ -237,15 +237,65 @@ def selection(data: MainStorage, pop: List[Individual]):
 
 
 # TODO: krzyżowanie - KAMIL
-def crossover(data: MainStorage, pop: List[Individual], num_cross_points: List[int]):
+def crossover(data: MainStorage, pop: List[Individual], num_cross_points: List[int]) -> List[Individual]:
+    print_pop(pop, "Population to crossover:")
+
+    list_divisors: List[List] = [[] for i in range(len(num_cross_points))]  # list of list where every list has
+    # divisors of right side of chromosome: ch_p
     dict_of_used_p_s = data.get_used_sto_pack
-    for i in dict_of_used_p_s:
+    print(dict_of_used_p_s)
+    if len(num_cross_points) != len(dict_of_used_p_s):
         pass
+        # TODO throw exception
 
-    print(dict_of_used_p_s, num_cross_points)
+    for key, value in dict_of_used_p_s.items():
+        val1 = int(value / num_cross_points[key])
+        list_divisors[key].extend([val1] * num_cross_points[key])
+        if value % num_cross_points[key] != 0:
+            list_divisors[key].append(value % num_cross_points[key])
 
-    print_pop(pop, "populacja do krzyzowki:")
+    rand_lst1 = []  # shows which part of divided chromosome stay from parent 1
+    rand_lst2 = []  # shows which part of divided chromosome stay from parent 2
+    for i, j in enumerate(list_divisors):
+        temp = random.sample(range(len(j)), int(num_cross_points[i] / 2))
+        rand_lst1.append(temp)
+        temp2 = []
+        for p, k in enumerate(j):
+            if p not in temp:
+                temp2.append(p)
+        rand_lst2.append(temp2)
+    del temp, temp2
+
+    empty_ch_p = []
+    for i, j in enumerate(list_divisors):
+        for p, k in enumerate(j):
+            empty_ch_p.append([] * k)
+    print(empty_ch_p)
+    print("lista diviosrs",list_divisors)
+    print(rand_lst1)
+    print(rand_lst2)
+
+    pos=[0, 12, 14]
+    cou=[0, 4, 6, 8]
+    for num, it in enumerate(list_divisors):
+        print("num", num)
+        for i in rand_lst1[num]:
+            pos_t = pos[num]
+            print(pos_t)
+            empty_ch_p[i+cou[num]] = pop[0].ch_p[(pos_t+(it[i]*i)):(pos_t+(it[i]*(i+1)))]
+        for i in rand_lst2[num]:
+            pos_t = pos[num]
+            print(pos_t)
+            empty_ch_p[i + cou[num]] = pop[1].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
+
+    print(empty_ch_p)
+
+    # ch_p =
+    # children = (Individual(ch_t, ch_p), Individual(ch_t, ch_p))
+
     return 0
+
+
 # TODO: naprawa populacji - NICOLAS
 def fix_pop(data: MainStorage, pop: List[Individual]):
     return pop
@@ -267,4 +317,3 @@ def print_pop(pop: List[Individual], text: str):
 
 if __name__ == '__main__':
     pass
-
