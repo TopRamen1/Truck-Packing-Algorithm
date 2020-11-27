@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 
 
 class DataFromFile:
@@ -134,3 +134,31 @@ class MainStorage:
     def info_main_storage(self):
         return f"Number of packages: {len(self.list_of_packages)}\nNumber of trucks: {len(self.list_of_trucks)}\n" \
                f"Number of storages: {len(self.list_of_storages)}".format(self=self)
+
+    @property
+    def get_used_sto_pack(self) -> Dict[int, int]:
+        list_of_used_addresses = []
+        list_of_used_storages = []  # list of active storages in case of there is a chance that there are storages
+        # without any set of packages
+
+        for package in self.list_of_packages:
+            list_of_used_addresses.append(package.address)
+        for storage in self.list_of_storages:
+            if storage.address in list_of_used_addresses:
+                list_of_used_storages.append(storage.address)
+        del list_of_used_addresses
+
+        counters = [[0] * len(list_of_used_storages)]
+        for s in list_of_used_storages:
+            for p in self.list_of_packages:
+                if p.address == s:
+                    counters[0][s] += 1
+
+        dict_of_used_p_s = {} # dict of number of used storages and counters :Dict: {storage: counter}
+        counters = counters[0][:]  # list of numbers of package's addresses
+        for s in list_of_used_storages:
+            for i, c in enumerate(counters):
+                if s == i:
+                    dict_of_used_p_s[s] = c
+
+        return dict_of_used_p_s

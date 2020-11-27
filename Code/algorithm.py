@@ -237,10 +237,15 @@ def selection(data: MainStorage, pop: List[Individual]):
 
 
 # TODO: krzyżowanie - KAMIL
-def crossover(data: MainStorage, pop: List[Individual]):
-    return pop
+def crossover(data: MainStorage, pop: List[Individual], num_cross_points: List[int]):
+    dict_of_used_p_s = data.get_used_sto_pack
+    for i in dict_of_used_p_s:
+        pass
 
+    print(dict_of_used_p_s, num_cross_points)
 
+    print_pop(pop, "populacja do krzyzowki:")
+    return 0
 # TODO: naprawa populacji - NICOLAS
 def fix_pop(data: MainStorage, pop: List[Individual]):
     return pop
@@ -262,3 +267,4 @@ def print_pop(pop: List[Individual], text: str):
 
 if __name__ == '__main__':
     pass
+

@@ -1,6 +1,6 @@
 from algorithm_data import DataFromFile
 from algorithm_data import MainStorage
-from algorithm import init_pop, fitness, selection, print_pop
+from algorithm import init_pop, fitness, selection, print_pop, crossover
 
 if __name__ == '__main__':
 
@@ -21,16 +21,16 @@ if __name__ == '__main__':
 
     storage = MainStorage(data)
 
-    print(storage)
-
     pop = init_pop(storage, 8)
 
-    print_pop(pop, "Populacja po inicjalizacji:")
+    # print_pop(pop, "Populacja po inicjalizacji:")
 
     pop = fitness(storage, pop)
 
-    print_pop(pop, "Populacja po ocenie:")
+    # print_pop(pop, "Populacja po ocenie:")
 
     pop = selection(storage, pop)
 
-    print_pop(pop, "Populacja po selekcji:")
+    # print_pop(pop, "Populacja po selekcji:")
+
+    new_pop = crossover(storage, pop, [3, 1, 1])
