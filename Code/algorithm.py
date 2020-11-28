@@ -249,7 +249,7 @@ def crossover(data: MainStorage, pop: List[Individual], num_cross_points: List[i
     list_divisors: List[List] = [[] for i in range(len(num_cross_points))]
     # dict of number of used storages and number of individual packages in used storages
     dict_of_used_p_s = data.get_used_sto_pack
-    ch_p1 = []  # empty chromosome
+    ch_p1 = []  # empty package's chromosome
     rand_lst1 = []  # shows which part of divided chromosome stay from parent 1
     rand_lst2 = []  # shows which part of divided chromosome stay from parent 2
 
@@ -274,12 +274,12 @@ def crossover(data: MainStorage, pop: List[Individual], num_cross_points: List[i
     ch_p2 = ch_p1[:]
 
 # DO TESTOWANIA ODKOMENTUJ
-    # print(ch_p1)
-    # print(ch_p2)
-    #
-    # print("lista diviosrs", list_divisors)
-    # print(rand_lst1)
-    # print(rand_lst2)
+    print(ch_p1)
+    print(ch_p2)
+
+    print("lista diviosrs", list_divisors)
+    print(rand_lst1)
+    print(rand_lst2)
 
     # TODO: robienie tego automatycznie:
     pos = [0, 13, 18]
@@ -306,6 +306,34 @@ def crossover(data: MainStorage, pop: List[Individual], num_cross_points: List[i
 
     print(ch_p1)
     print(ch_p2)
+    flat_list = []
+    for sublist in ch_p1:
+        if isinstance(sublist, list):
+            for item in sublist:
+                flat_list.append(item)
+        else:
+            flat_list.append(sublist)
+    ch_p1 = flat_list[:]
+    flat_list = []
+    for sublist in ch_p2:
+        if isinstance(sublist, list):
+            for item in sublist:
+                flat_list.append(item)
+        else:
+            flat_list.append(sublist)
+    ch_p2 = flat_list[:]
+
+    ch_t2 = [[-1] for i in range(len(data.list_of_trucks))]  # empty truck's chromosome
+    print(ch_t2)
+    for index, gen in enumerate(ch_p2):
+        if ch_t2[gen] == [-1]:
+            ch_t2[gen] = [data.list_of_packages[index].address]
+        else:
+            if data.list_of_packages[index].address not in ch_t2[gen]:
+                ch_t2[gen].append(data.list_of_packages[index].address)
+
+    print(ch_p2)
+    print(ch_t2)
 
     # children = (Individual(ch_t, ch_p), Individual(ch_t, ch_p))
 
