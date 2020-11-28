@@ -1,4 +1,5 @@
 from algorithm_data import MainStorage
+from extra_functions import *
 from typing import List
 import random
 
@@ -274,12 +275,12 @@ def crossover(data: MainStorage, pop: List[Individual], num_cross_points: List[i
     ch_p2 = ch_p1[:]
 
 # DO TESTOWANIA ODKOMENTUJ
-    print(ch_p1)
-    print(ch_p2)
-
-    print("lista diviosrs", list_divisors)
-    print(rand_lst1)
-    print(rand_lst2)
+#     print(ch_p1)
+#     print(ch_p2)
+#
+#     print("lista diviosrs", list_divisors)
+#     print(rand_lst1)
+#     print(rand_lst2)
 
     # TODO: robienie tego automatycznie:
     pos = [0, 13, 18]
@@ -304,8 +305,8 @@ def crossover(data: MainStorage, pop: List[Individual], num_cross_points: List[i
                 ch_p1[i + cou[num]] = pop[1].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
                 ch_p2[i + cou[num]] = pop[0].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
 
-    print(ch_p1)
-    print(ch_p2)
+    # print(ch_p1)
+    # print(ch_p2)
     flat_list = []
     for sublist in ch_p1:
         if isinstance(sublist, list):
