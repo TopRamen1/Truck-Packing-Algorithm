@@ -1,6 +1,6 @@
 from algorithm_data import MainStorage
-from extra_functions import *
-from typing import List
+import extra_functions as ex_fun
+from typing import List, Tuple
 import random
 
 
@@ -242,103 +242,60 @@ def selection(data: MainStorage, pop: List[Individual]):
     return new_pop
 
 
-# TODO: krzyżowanie - KAMIL
-def crossover(data: MainStorage, pop: List[Individual], num_cross_points: List[int]) -> List[Individual]:
+def crossover(data: MainStorage, pop: List[Individual], num_cross_points: List[int]) -> Tuple[Individual, Individual]:
     print_pop(pop, "Population to crossover:")
 
-    # list of list where every list has divisors of right side of chromosome: ch_p
-    list_divisors: List[List] = [[] for i in range(len(num_cross_points))]
-    # dict of number of used storages and number of individual packages in used storages
-    dict_of_used_p_s = data.get_used_sto_pack
-    ch_p1 = []  # empty package's chromosome
-    rand_lst1 = []  # shows which part of divided chromosome stay from parent 1
-    rand_lst2 = []  # shows which part of divided chromosome stay from parent 2
+    dict_of_used_p_s = data.get_used_sto_pack  # dict of number of used storages and number of individual packages in used storages
 
     # generate divisors for every part of chromosome (ch_p), parts are the number of storages
-    for key, value in dict_of_used_p_s.items():
-        val1 = int(value / num_cross_points[key])
-        list_divisors[key].extend([val1] * num_cross_points[key])
-        if value % num_cross_points[key] != 0:
-            list_divisors[key].append(value % num_cross_points[key])
+    list_divisors = ex_fun.ge_div(dict_of_used_p_s, num_cross_points)
 
-    # generate lists which tells you which genes to take from a particular parent
+    # generate List of empty Lists
+    ch_p1 = []  # empty package's chromosome
     for i, j in enumerate(list_divisors):
-        temp = random.sample(range(len(j)), int(num_cross_points[i] / 2))
-        rand_lst1.append(temp)
-        temp2 = []
         for p, k in enumerate(j):
             ch_p1.append([] * k)
-            if p not in temp:
-                temp2.append(p)
-        rand_lst2.append(temp2)
-    del temp, temp2, val1
     ch_p2 = ch_p1[:]
 
-# DO TESTOWANIA ODKOMENTUJ
-#     print(ch_p1)
-#     print(ch_p2)
-#
-#     print("lista diviosrs", list_divisors)
-#     print(rand_lst1)
-#     print(rand_lst2)
+    # generate lists which tells you which genes to take from a particular parent
+    rand_lst1, rand_lst2 = ex_fun.ge_rand(list_divisors, num_cross_points)
 
-    # TODO: robienie tego automatycznie:
-    pos = [0, 13, 18]
-    cou = [0, 5, 8, 10]
-    # generate children from chromosome of individual parents
+    # generate start position of each part of package(split based on address) and number of cuts of chromosome(crossing)
+    pos = ex_fun.get_position(dict_of_used_p_s)
+    counter = ex_fun.get_counter(list_divisors)
+
+    # main algorithm for crossover: generate children from chromosome of individual parents
     for num, it in enumerate(list_divisors):
         for i in rand_lst1[num]:
             pos_t = pos[num]
             if it[i] < it[i - 1]:
-                ch_p1[i + cou[num]] = pop[0].ch_p[pos[num + 1] - 1]
-                ch_p2[i + cou[num]] = pop[1].ch_p[pos[num + 1] - 1]
+                ch_p1[i + counter[num]] = pop[0].ch_p[pos[num + 1] - 1]
+                ch_p2[i + counter[num]] = pop[1].ch_p[pos[num + 1] - 1]
             else:
-                ch_p1[i + cou[num]] = pop[0].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
-                ch_p2[i + cou[num]] = pop[1].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
+                ch_p1[i + counter[num]] = pop[0].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
+                ch_p2[i + counter[num]] = pop[1].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
 
         for i in rand_lst2[num]:
             pos_t = pos[num]
             if it[i] < it[i - 1]:
-                ch_p1[i + cou[num]] = pop[1].ch_p[pos[num + 1] - 1]
-                ch_p2[i + cou[num]] = pop[0].ch_p[pos[num + 1] - 1]
+                ch_p1[i + counter[num]] = pop[1].ch_p[pos[num + 1] - 1]
+                ch_p2[i + counter[num]] = pop[0].ch_p[pos[num + 1] - 1]
             else:
-                ch_p1[i + cou[num]] = pop[1].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
-                ch_p2[i + cou[num]] = pop[0].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
+                ch_p1[i + counter[num]] = pop[1].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
+                ch_p2[i + counter[num]] = pop[0].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
 
-    # print(ch_p1)
-    # print(ch_p2)
-    flat_list = []
-    for sublist in ch_p1:
-        if isinstance(sublist, list):
-            for item in sublist:
-                flat_list.append(item)
-        else:
-            flat_list.append(sublist)
-    ch_p1 = flat_list[:]
-    flat_list = []
-    for sublist in ch_p2:
-        if isinstance(sublist, list):
-            for item in sublist:
-                flat_list.append(item)
-        else:
-            flat_list.append(sublist)
-    ch_p2 = flat_list[:]
+    # flattened function to do List from List of Lists
+    ch_p1 = ex_fun.flat_list(ch_p1)
+    ch_p2 = ex_fun.flat_list(ch_p2)
 
-    ch_t2 = [[-1] for i in range(len(data.list_of_trucks))]  # empty truck's chromosome
-    print(ch_t2)
-    for index, gen in enumerate(ch_p2):
-        if ch_t2[gen] == [-1]:
-            ch_t2[gen] = [data.list_of_packages[index].address]
-        else:
-            if data.list_of_packages[index].address not in ch_t2[gen]:
-                ch_t2[gen].append(data.list_of_packages[index].address)
+    # make left part of chromosome: ch_t from right part of chromosome: ch_p
+    ch_t1 = ex_fun.cht_from_chp(data.list_of_trucks, data.list_of_packages, ch_p1)
+    ch_t2 = ex_fun.cht_from_chp(data.list_of_trucks, data.list_of_packages, ch_p2)
 
-    print(ch_p2)
-    print(ch_t2)
+    children = (Individual(ch_t1, ch_p1), Individual(ch_t2, ch_p2))
+    print_pop([Individual(ch_t1, ch_p1), Individual(ch_t2, ch_p2)], "Population after crossover:")
 
-    # children = (Individual(ch_t, ch_p), Individual(ch_t, ch_p))
-
-    return 0
+    return children
 
 
 # TODO: naprawa populacji - NICOLAS

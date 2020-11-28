@@ -32,4 +32,4 @@ if __name__ == '__main__':
 
     # print_pop(pop, "Populacja po selekcji:")
     pop = pop[0:2]
-    new_pop = crossover(storage, pop, [4, 2, 2])
+    new_pop = crossover(storage, pop, [3, 2, 2])
