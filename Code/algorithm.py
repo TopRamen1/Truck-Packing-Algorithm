@@ -28,6 +28,7 @@ class Individual:
         return len(self.ch_t) + len(self.ch_p)
 
 
+
 def genetic_alg(data: MainStorage, it_num: int):
     """
 
@@ -118,6 +119,8 @@ def check_lims(data_mst: MainStorage, data_ind: Individual):
     act_truck_pos = [i for i, m in enumerate(data_ind.ch_t) if m != -1]
     sum_weights = 0
 
+    out = [0, 0, 0]
+
     """ Checking the first limit """
     for i in data_mst.list_of_packages:
         sum_weights += i.weight
@@ -125,7 +128,8 @@ def check_lims(data_mst: MainStorage, data_ind: Individual):
     for j in data_mst.list_of_trucks:
         sum_loads += j.load
     if sum_weights > sum_loads:
-        raise NewException.lim1
+        out[0] = -1
+        #raise NewException.lim1
 
     """ Checking the second limit """
     for i in act_truck_pos:
@@ -134,12 +138,16 @@ def check_lims(data_mst: MainStorage, data_ind: Individual):
             if i == data_ind.ch_p[j]:
                 sum_weights += data_mst.list_of_packages[j].weight
         if sum_weights > data_mst.list_of_trucks[i].load:
-            raise NewException.lim2
+            out[1] = -1
+            #raise NewException.lim2
 
     """ Checking the third limit """
     for i in data_ind.ch_p:
         if i == -1:
-            raise NewException.lim3
+            out[2] = -1
+            #raise NewException.lim3
+
+    return out
 
 
 def random_chromosome(data: MainStorage):
@@ -293,14 +301,101 @@ def crossover(data: MainStorage, pop: List[Individual], num_cross_points: List[i
     ch_t2 = ex_fun.cht_from_chp(data.list_of_trucks, data.list_of_packages, ch_p2)
 
     children = (Individual(ch_t1, ch_p1), Individual(ch_t2, ch_p2))
+
     print_pop([Individual(ch_t1, ch_p1), Individual(ch_t2, ch_p2)], "Population after crossover:")
+
+    ch_t1, ch_p1 = fix_ind(ch_t1, ch_p1, data)
+    ch_t2, ch_p2 = fix_ind(ch_t2, ch_p2, data)
+
+    children = (Individual(ch_t1, ch_p1), Individual(ch_t2, ch_p2))
+
+    out1 = check_lims(data, children[0])
+    out2 = check_lims(data, children[1])
+    print(out1, out2)
+
+    print_pop([Individual(ch_t1, ch_p1), Individual(ch_t2, ch_p2)], "Population after crossover and fix:")
 
     return children
 
 
-# TODO: naprawa populacji - NICOLAS
-def fix_pop(data: MainStorage, pop: List[Individual]):
-    return pop
+# TODO: naprawa osobnika - NICOLAS
+
+def fix_ind(ch_t: List[List[int]], ch_p: List[int], data: MainStorage):
+
+    # remove double adresses
+    for t_id in range(len(ch_t)):
+        if len(ch_t[t_id]) > 1:
+            a = random.choice(ch_t[t_id])
+            ch_t[t_id] = [a]
+            for p_id in range(len(ch_p)):
+                if ch_p[p_id] == t_id and data.list_of_packages[p_id].address != a:
+                    ch_p[p_id] = -1
+
+    ch_t = ex_fun.flat_list(ch_t)
+
+    #print("\nremoved adresses")
+    # print(str(ch_t) + ' ' + str(ch_p))
+
+    # compute cargo weights
+    cargo_w = [] * len(ch_t)
+
+    for t_id in range(len(ch_t)):
+        w_sum = 0
+        for p_id in range(len(ch_p)):
+            if ch_p[p_id] == t_id:
+                w_sum += data.list_of_packages[p_id].weight
+
+        cargo_w.append(w_sum)
+
+    # print("\ncomputet cargo weight")
+    # print(cargo_w)
+
+    # reomve packages from trucks if they are overloaded
+    for t_id in range(len(ch_t)):
+        if cargo_w[t_id] > data.list_of_trucks[t_id].load:
+            p_to_truck = []
+            for p_id in range(len(ch_p)):
+                if ch_p[p_id] == t_id:
+                    p_to_truck.append(p_id)
+
+            while cargo_w[t_id] > data.list_of_trucks[t_id].load:
+                # remove random package
+                p_id = random.choice(p_to_truck)
+                p_to_truck.remove(p_id)
+                ch_p[p_id] = -1
+                cargo_w[t_id] -= data.list_of_packages[p_id].weight
+
+    # print("\nremove overloaded")
+    # print(cargo_w)
+    # print(str(ch_t) + ' ' + str(ch_p))
+
+    # put all packages to place
+    for p_id in range(len(ch_p)):
+        if ch_p[p_id] == -1:
+            p = data.list_of_packages[p_id]
+
+            for t_id in range(len(ch_t)):
+                if ch_t[t_id] == p.address:
+                    w_sum = 0
+                    for p1_id in range(len(ch_p)):
+                        if ch_p[p1_id] == t_id:
+                            w_sum += data.list_of_packages[p1_id].weight
+
+                    if data.list_of_trucks[t_id].load >= w_sum + p.weight:
+                        ch_p[p_id] = t_id
+                        break
+
+            if ch_p[p_id] == -1:
+                free_trucks = []
+                for t_id in range(len(ch_t)):
+                    if ch_t[t_id] == -1:
+                        free_trucks.append(t_id)
+
+                t_id = random.choice(free_trucks)
+                ch_p[p_id] = t_id
+                ch_t[t_id] = data.list_of_packages[p_id].address
+
+    return ch_t, ch_p
 
 
 # TODO: Mutacja - WOJTEK

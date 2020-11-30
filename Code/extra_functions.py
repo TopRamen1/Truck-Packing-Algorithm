@@ -85,3 +85,4 @@ def get_counter(list_divisors_: List[List[int]]) -> List[int]:
     del value
 
     return counter
+
