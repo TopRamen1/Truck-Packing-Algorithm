@@ -28,7 +28,6 @@ class Individual:
         return len(self.ch_t) + len(self.ch_p)
 
 
-
 def genetic_alg(data: MainStorage, it_num: int):
     """
 
@@ -88,38 +87,28 @@ def obj_fcn(data_mst: MainStorage, data_ind: Individual):
     return final_result
 
 
-class NewException:
-    def __init__(self):
-        pass
-
-    def __str__(self):
-        return "Przekroczono warunek ograniczający"
-
-    @property
-    def lim1(self):
-        return 'Przekroczono pierwszy warunek'
-
-    @property
-    def lim2(self):
-        return 'Przekroczono drugi warunek'
-
-    def lim3(self):
-        return 'Przekroczono trzeci warunek'
-
-    def lim4(self):
-        return 'Przekroczono czwarty warunek'
+class Exception1(Exception):
+    def __init__(self, message="Przekroczono pierwszy warunek ograniczający"):
+        self.message = message
+        super().__init__(self.message)
 
 
-# class ExceptionCr(Exception):
-#     """The number of cuts must be equal to the number of storages where the packages are going"""
+class Exception2(Exception):
+    def __init__(self, message="Przekroczono drugi warunek ograniczający"):
+        self.message = message
+        super().__init__(self.message)
+
+
+class Exception3(Exception):
+    def __init__(self, message="Przekroczono trzeci warunek ograniczający"):
+        self.message = message
+        super().__init__(self.message)
 
 
 def check_lims(data_mst: MainStorage, data_ind: Individual):
     act_package_pos = [j for j, p in enumerate(data_ind.ch_p)]
     act_truck_pos = [i for i, m in enumerate(data_ind.ch_t) if m != -1]
     sum_weights = 0
-
-    out = [0, 0, 0]
 
     """ Checking the first limit """
     for i in data_mst.list_of_packages:
@@ -128,8 +117,7 @@ def check_lims(data_mst: MainStorage, data_ind: Individual):
     for j in data_mst.list_of_trucks:
         sum_loads += j.load
     if sum_weights > sum_loads:
-        out[0] = -1
-        #raise NewException.lim1
+        raise Exception1
 
     """ Checking the second limit """
     for i in act_truck_pos:
@@ -138,16 +126,12 @@ def check_lims(data_mst: MainStorage, data_ind: Individual):
             if i == data_ind.ch_p[j]:
                 sum_weights += data_mst.list_of_packages[j].weight
         if sum_weights > data_mst.list_of_trucks[i].load:
-            out[1] = -1
-            #raise NewException.lim2
+            raise Exception2
 
     """ Checking the third limit """
     for i in data_ind.ch_p:
         if i == -1:
-            out[2] = -1
-            #raise NewException.lim3
-
-    return out
+            raise Exception3
 
 
 def random_chromosome(data: MainStorage):
@@ -254,9 +238,11 @@ def crossover(data: MainStorage, pop: List[Individual], num_cross_points: List[i
     print_pop(pop, "Population to crossover:")
 
     dict_of_used_p_s = data.get_used_sto_pack  # dict of number of used storages and number of individual packages in used storages
+    print(dict_of_used_p_s)
 
     # generate divisors for every part of chromosome (ch_p), parts are the number of storages
     list_divisors = ex_fun.ge_div(dict_of_used_p_s, num_cross_points)
+    print(list_divisors)
 
     # generate List of empty Lists
     ch_p1 = []  # empty package's chromosome
@@ -267,10 +253,13 @@ def crossover(data: MainStorage, pop: List[Individual], num_cross_points: List[i
 
     # generate lists which tells you which genes to take from a particular parent
     rand_lst1, rand_lst2 = ex_fun.ge_rand(list_divisors, num_cross_points)
+    print(rand_lst1)
+    print(rand_lst2)
 
     # generate start position of each part of package(split based on address) and number of cuts of chromosome(crossing)
     pos = ex_fun.get_position(dict_of_used_p_s)
     counter = ex_fun.get_counter(list_divisors)
+    print(counter)
 
     # main algorithm for crossover: generate children from chromosome of individual parents
     for num, it in enumerate(list_divisors):
@@ -321,7 +310,6 @@ def crossover(data: MainStorage, pop: List[Individual], num_cross_points: List[i
 # TODO: naprawa osobnika - NICOLAS
 
 def fix_ind(ch_t: List[List[int]], ch_p: List[int], data: MainStorage):
-
     # remove double adresses
     for t_id in range(len(ch_t)):
         if len(ch_t[t_id]) > 1:
@@ -333,7 +321,7 @@ def fix_ind(ch_t: List[List[int]], ch_p: List[int], data: MainStorage):
 
     ch_t = ex_fun.flat_list(ch_t)
 
-    #print("\nremoved adresses")
+    # print("\nremoved adresses")
     # print(str(ch_t) + ' ' + str(ch_p))
 
     # compute cargo weights
@@ -399,8 +387,41 @@ def fix_ind(ch_t: List[List[int]], ch_p: List[int], data: MainStorage):
 
 
 # TODO: Mutacja - WOJTEK
-def mutation(data: MainStorage, pop: List[Individual]):
+def mutation(data: MainStorage, pop: List[Individual]) -> List[Individual]:
+    random_ind = []
+    duplications = []
+    probability = len(pop) * 0.5
+    while len(random_ind) < probability:
+        for i in range(int(probability)):
+            x = random.choice(range(0, len(pop), 1))
+            if x not in duplications:
+                random_ind.append(x)
+                duplications.append(x)
+            if len(random_ind) == probability:
+                break
+    ch_t_list = mutation_helper(pop, random_ind)
+    for id, i in enumerate(pop):
+        for id2, j in enumerate(random_ind):
+            if id == j:
+                new_ch_p = i.ch_p[:]
+                gen_x = random.choice(range(0, len(data.list_of_packages), 1))
+                x = random.choice(range(0, len(data.list_of_trucks), 1))
+                new_ch_p[gen_x] = x
+                ch_t_list[id2][x].append(data.list_of_packages[gen_x].address)
+                i.ch_t, i.ch_p = fix_ind(ch_t_list[id2], new_ch_p, data)
     return pop
+
+
+def mutation_helper(pop: List[Individual], random_ind: List[int]) -> List[List[List[int]]]:
+    new_ch_t = []
+    for id, i in enumerate(pop):
+        for j in random_ind:
+            if id == j:
+                help_list = []
+                for e in i.ch_t:
+                    help_list.append([e])
+                new_ch_t.append(help_list)
+    return new_ch_t
 
 
 def print_pop(pop: List[Individual], text: str):

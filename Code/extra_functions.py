@@ -2,7 +2,6 @@
 from typing import List, Tuple, Dict
 import random
 
-
 def flat_list(org_list_: List[List[int]]) -> List[int]:
     """Flattened function to do List from List of Lists"""
 
@@ -51,7 +50,6 @@ def ge_div(dict_of_used_p_s_: Dict[int, int], num_cross_points_: List[int]) -> L
     del val1
 
     return list_divisors
-
 
 def cht_from_chp(list_of_trucks_: List, list_of_packages_: List, ch_p: List[int]) -> List[List[int]]:
     """Make left part of chromosome: ch_t from right part of chromosome: ch_p"""
