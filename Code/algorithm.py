@@ -19,39 +19,41 @@ class Individual:
         self.ch_t = ch_t
         self.ch_p = ch_p
 
+        self.obj_fcn = 0
         self.prob = prob
 
     def __str__(self):
-        return str(self.ch_t) + ' ' + str(self.ch_p) + ' ' + str(self.prob) + ' ' + str(len(self.ch_p))
+        return str(self.ch_t) + ' ' + str(self.ch_p) + ' ' + str(self.prob) + ' ' + str(self.obj_fcn) + ' ' + str(len(self.ch_p))
 
     def get_ch_len(self):
         return len(self.ch_t) + len(self.ch_p)
 
 
-def genetic_alg(data: MainStorage, it_num: int):
+# TODO: dodac wiecej scenariuszy testowych (plików)
+def genetic_alg(data: MainStorage, it_num: int, pop_size: int):
     """
 
     """
-    pop = init_pop(data, 8)
-
-    print_pop(pop, "Populacja po inicjalizacji:")
+    pop = init_pop(data, pop_size)
 
     pop = fitness(data, pop)
 
     pop = selection(data, pop)
 
+    print_pop(pop, "Populacja po inicjalizacji:")
+
     i = 0
 
     while i < it_num:
-        pop = crossover(data, pop)
+        pop = cross_pop(data, pop, [2, 2, 2])
 
         pop = mutation(data, pop)
 
-        print_pop(pop, "Populacja po ocenie:")
+        pop = fitness(data, pop)
 
         pop = selection(data, pop)
 
-        print_pop(pop, "Populacja po selekcji:")
+        print_pop(pop, "Populacja po iteracji: {}".format(i))
 
         i += 1
 
@@ -86,7 +88,7 @@ def obj_fcn(data_mst: MainStorage, data_ind: Individual):
 
     return final_result
 
-
+# TODO: dodać wiecej testów i (np długość chromosomu)
 class Exception1(Exception):
     def __init__(self, message="Przekroczono pierwszy warunek ograniczający"):
         self.message = message
@@ -205,13 +207,25 @@ def fitness(data: MainStorage, pop: List[Individual]):
     :return: rated population
     """
     sum1 = 0
-    sum2 = 0
-    for i in pop:
-        sum1 += obj_fcn(data, i)
+    sum3 = 0
+    obj_fcn_vals = []
+    for i in range(len(pop)):
+        val = obj_fcn(data, pop[i])
+        sum3 += val
+        obj_fcn_vals.append((i, val))
+        sum1 += i + 1
 
-    for i in pop:
-        i.prob = obj_fcn(data, i) / sum1
-        sum2 += i.prob
+    obj_fcn_vals.sort(key=lambda e: e[1])
+
+    print(sum3 / len(obj_fcn_vals))
+
+    sum2 = 0
+    j = len(obj_fcn_vals)
+    for i, val in obj_fcn_vals:
+        pop[i].prob = j / sum1
+        pop[i].obj_fcn = val
+        sum2 += j / sum1
+        j -= 1
 
     return pop
 
@@ -234,8 +248,10 @@ def selection(data: MainStorage, pop: List[Individual]):
     return new_pop
 
 
-def crossover(data: MainStorage, pop: List[Individual], num_cross_points: List[int]) -> Tuple[Individual, Individual]:
-    print_pop(pop, "Population to crossover:")
+def crossover(data: MainStorage, ind1, ind2, num_cross_points: List[int]) -> Tuple[Individual, Individual]:
+    pop = [ind1, ind2]
+
+    # print_pop(pop, "Population to crossover:")
 
     dict_of_used_p_s = data.get_used_sto_pack  # dict of number of used storages and number of individual packages in used storages
     # print(dict_of_used_p_s)
@@ -291,7 +307,7 @@ def crossover(data: MainStorage, pop: List[Individual], num_cross_points: List[i
 
     children = (Individual(ch_t1, ch_p1), Individual(ch_t2, ch_p2))
 
-    print_pop([Individual(ch_t1, ch_p1), Individual(ch_t2, ch_p2)], "Population after crossover:")
+    # print_pop([Individual(ch_t1, ch_p1), Individual(ch_t2, ch_p2)], "Population after crossover:")
 
     ch_t1, ch_p1 = fix_ind(ch_t1, ch_p1, data)
     ch_t2, ch_p2 = fix_ind(ch_t2, ch_p2, data)
@@ -302,13 +318,24 @@ def crossover(data: MainStorage, pop: List[Individual], num_cross_points: List[i
     # out2 = check_lims(data, children[1])
     # print(out1, out2)
 
-    print_pop([Individual(ch_t1, ch_p1), Individual(ch_t2, ch_p2)], "Population after crossover and fix:")
+    # print_pop([Individual(ch_t1, ch_p1), Individual(ch_t2, ch_p2)], "Population after crossover and fix:")
 
     return children
 
 
-# TODO: naprawa osobnika - NICOLAS
+def cross_pop(data: MainStorage, pop: List[Individual], num_cross_points: List[int]):
+    i = 0
+    new_pop = []
+    while i < len(pop):
+        p1 = crossover(data, pop[i], pop[i+1], num_cross_points)
+        new_pop.append(p1[0])
+        new_pop.append(p1[1])
+        i += 2
 
+    return new_pop
+
+
+# TODO: naprawa osobnika - NICOLAS
 def fix_ind(ch_t: List[List[int]], ch_p: List[int], data: MainStorage):
     # remove double adresses
     for t_id in range(len(ch_t)):
@@ -390,7 +417,7 @@ def fix_ind(ch_t: List[List[int]], ch_p: List[int], data: MainStorage):
 def mutation(data: MainStorage, pop: List[Individual]) -> List[Individual]:
     random_ind = []
     duplications = []
-    probability = len(pop) * 0.5
+    probability = len(pop) * 0.02
     while len(random_ind) < probability:
         for i in range(int(probability)):
             x = random.choice(range(0, len(pop), 1))
@@ -427,8 +454,10 @@ def mutation_helper(pop: List[Individual], random_ind: List[int]) -> List[List[L
 def print_pop(pop: List[Individual], text: str):
     print(text)
 
+    j = 0
     for i in pop:
-        print(i)
+        print(j, i)
+        j += 1
 
     print('\n')
 

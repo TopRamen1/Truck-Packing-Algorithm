@@ -1,7 +1,7 @@
 from algorithm_data import DataFromFile
 from algorithm_data import MainStorage
 
-from algorithm import init_pop, fitness, selection, print_pop, crossover, mutation
+from algorithm import init_pop, fitness, selection, print_pop, cross_pop, mutation, genetic_alg
 
 if __name__ == '__main__':
     """
@@ -18,10 +18,11 @@ if __name__ == '__main__':
 
     """
 
-    data = DataFromFile("data/test2/p.txt", "data/test2/t.txt", "data/test2/s.txt", 2)
+    """
+        data = DataFromFile("data/test2/p.txt", "data/test2/t.txt", "data/test2/s.txt", 2)
     storage = MainStorage(data)
 
-    pop = init_pop(storage, 8)
+    pop = init_pop(storage, 20)
 
     # print_pop(pop, "Populacja po inicjalizacji:")
 
@@ -32,10 +33,22 @@ if __name__ == '__main__':
     pop = selection(storage, pop)
 
     print_pop(pop, "Populacja po selekcji:")
-    pop = pop[0:2]
-    new_pop = crossover(storage, pop, [2, 2, 2])
 
-    newest_pop = mutation(storage, pop)
+    pop = cross_pop(storage, pop, [2, 2, 2])
 
-    print_pop(newest_pop, "Population after mutation:")
+    print_pop(pop, "Population after cross:")
+
+    # newest_pop = mutation(storage, pop)
+    #
+    # print_pop(newest_pop, "Population after mutation:")
+    """
+
+    data = DataFromFile("data/test2/p.txt", "data/test2/t.txt", "data/test2/s.txt", 2)
+    storage = MainStorage(data)
+
+    genetic_alg(storage, 50, 200)
+
+
+
+
 
