@@ -17,6 +17,7 @@ if __name__ == '__main__':
         print(i)
 
     """
+
     data = DataFromFile("data/test2/p.txt", "data/test2/t.txt", "data/test2/s.txt", 2)
     storage = MainStorage(data)
 
@@ -26,13 +27,15 @@ if __name__ == '__main__':
 
     pop = fitness(storage, pop)
 
-    # print_pop(pop, "Populacja po ocenie:")
+    print_pop(pop, "Populacja po ocenie:")
 
     pop = selection(storage, pop)
 
-    # print_pop(pop, "Populacja po selekcji:")
-    #pop = pop[0:2]
-    #new_pop = crossover(storage, pop, [3, 3, 2])
+    print_pop(pop, "Populacja po selekcji:")
+    pop = pop[0:2]
+    new_pop = crossover(storage, pop, [2, 2, 2])
 
     newest_pop = mutation(storage, pop)
+
+    print_pop(newest_pop, "Population after mutation:")
 

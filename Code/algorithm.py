@@ -22,7 +22,7 @@ class Individual:
         self.prob = prob
 
     def __str__(self):
-        return str(self.ch_t) + ' ' + str(self.ch_p) + ' ' + str(self.prob)
+        return str(self.ch_t) + ' ' + str(self.ch_p) + ' ' + str(self.prob) + ' ' + str(len(self.ch_p))
 
     def get_ch_len(self):
         return len(self.ch_t) + len(self.ch_p)
@@ -238,11 +238,11 @@ def crossover(data: MainStorage, pop: List[Individual], num_cross_points: List[i
     print_pop(pop, "Population to crossover:")
 
     dict_of_used_p_s = data.get_used_sto_pack  # dict of number of used storages and number of individual packages in used storages
-    print(dict_of_used_p_s)
+    # print(dict_of_used_p_s)
 
     # generate divisors for every part of chromosome (ch_p), parts are the number of storages
     list_divisors = ex_fun.ge_div(dict_of_used_p_s, num_cross_points)
-    print(list_divisors)
+    # print(list_divisors)
 
     # generate List of empty Lists
     ch_p1 = []  # empty package's chromosome
@@ -253,13 +253,13 @@ def crossover(data: MainStorage, pop: List[Individual], num_cross_points: List[i
 
     # generate lists which tells you which genes to take from a particular parent
     rand_lst1, rand_lst2 = ex_fun.ge_rand(list_divisors, num_cross_points)
-    print(rand_lst1)
-    print(rand_lst2)
+    # print(rand_lst1)
+    # print(rand_lst2)
 
     # generate start position of each part of package(split based on address) and number of cuts of chromosome(crossing)
     pos = ex_fun.get_position(dict_of_used_p_s)
     counter = ex_fun.get_counter(list_divisors)
-    print(counter)
+    # print(counter)
 
     # main algorithm for crossover: generate children from chromosome of individual parents
     for num, it in enumerate(list_divisors):
@@ -298,9 +298,9 @@ def crossover(data: MainStorage, pop: List[Individual], num_cross_points: List[i
 
     children = (Individual(ch_t1, ch_p1), Individual(ch_t2, ch_p2))
 
-    out1 = check_lims(data, children[0])
-    out2 = check_lims(data, children[1])
-    print(out1, out2)
+    # out1 = check_lims(data, children[0])
+    # out2 = check_lims(data, children[1])
+    # print(out1, out2)
 
     print_pop([Individual(ch_t1, ch_p1), Individual(ch_t2, ch_p2)], "Population after crossover and fix:")
 
