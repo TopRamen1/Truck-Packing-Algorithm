@@ -45,7 +45,7 @@ def genetic_alg(data: MainStorage, it_num: int, pop_size: int):
     i = 0
 
     while i < it_num:
-        pop = cross_pop(data, pop, [2, 2, 2])
+        pop = cross_pop(data, pop, [5, 2, 2])
 
         pop = mutation(data, pop)
 

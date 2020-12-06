@@ -82,7 +82,7 @@ class Truck:
         self.exp_cost = exp_cost_
         self.min_fuel_use = min_fuel_use_
         self.max_fuel_use = max_fuel_use_
-
+        # 1:16.6, 2:22.7, 3:28.8, 4:34.9, 5:41, 6:47.1, 7:53.2, 8:59.1,
     def __str__(self) -> str:
         return f"Truck no. {self.id}, Type: {self.type_t}, Load: {self.load}, Exploitation: {self.exp_cost}, Min. " \
                f"combustion: {self.min_fuel_use}, Max. combustion: {self.max_fuel_use}".format(self=self)

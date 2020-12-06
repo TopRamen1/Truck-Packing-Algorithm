@@ -46,7 +46,13 @@ if __name__ == '__main__':
     data = DataFromFile("data/test2/p.txt", "data/test2/t.txt", "data/test2/s.txt", 2)
     storage = MainStorage(data)
 
-    genetic_alg(storage, 50, 200)
+
+    genetic_alg(storage, 20, 100)
+
+
+
+
+
 
 
 
