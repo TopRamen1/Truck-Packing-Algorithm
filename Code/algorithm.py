@@ -30,7 +30,7 @@ class Individual:
 
 
 # TODO: dodac wiecej scenariuszy testowych (plików)
-def genetic_alg(data: MainStorage, it_num: int, pop_size: int):
+def genetic_alg(data: MainStorage, it_num: int, pop_size: int, div: List[int]):
     """
 
     """
@@ -45,7 +45,7 @@ def genetic_alg(data: MainStorage, it_num: int, pop_size: int):
     i = 0
 
     while i < it_num:
-        pop = cross_pop(data, pop, [5, 2, 2])
+        pop = cross_pop(data, pop, div)
 
         pop = mutation(data, pop)
 
@@ -281,21 +281,21 @@ def crossover(data: MainStorage, ind1, ind2, num_cross_points: List[int]) -> Tup
     for num, it in enumerate(list_divisors):
         for i in rand_lst1[num]:
             pos_t = pos[num]
-            if it[i] < it[i - 1]:
-                ch_p1[i + counter[num]] = pop[0].ch_p[pos[num + 1] - 1]
-                ch_p2[i + counter[num]] = pop[1].ch_p[pos[num + 1] - 1]
-            else:
-                ch_p1[i + counter[num]] = pop[0].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
-                ch_p2[i + counter[num]] = pop[1].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
+            # if it[i] < it[i - 1]:
+            #     ch_p1[i + counter[num]] = pop[0].ch_p[pos[num + 1] - 1]
+            #     ch_p2[i + counter[num]] = pop[1].ch_p[pos[num + 1] - 1]
+            # else:
+            ch_p1[i + counter[num]] = pop[0].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
+            ch_p2[i + counter[num]] = pop[1].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
 
         for i in rand_lst2[num]:
             pos_t = pos[num]
-            if it[i] < it[i - 1]:
-                ch_p1[i + counter[num]] = pop[1].ch_p[pos[num + 1] - 1]
-                ch_p2[i + counter[num]] = pop[0].ch_p[pos[num + 1] - 1]
-            else:
-                ch_p1[i + counter[num]] = pop[1].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
-                ch_p2[i + counter[num]] = pop[0].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
+            # if it[i] < it[i - 1]:
+            #     ch_p1[i + counter[num]] = pop[1].ch_p[pos[num + 1] - 1]
+            #     ch_p2[i + counter[num]] = pop[0].ch_p[pos[num + 1] - 1]
+            # else:
+            ch_p1[i + counter[num]] = pop[1].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
+            ch_p2[i + counter[num]] = pop[0].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
 
     # flattened function to do List from List of Lists
     ch_p1 = ex_fun.flat_list(ch_p1)

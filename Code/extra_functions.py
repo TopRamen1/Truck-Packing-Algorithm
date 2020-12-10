@@ -2,6 +2,7 @@
 from typing import List, Tuple, Dict
 import random
 
+
 def flat_list(org_list_: List[List[int]]) -> List[int]:
     """Flattened function to do List from List of Lists"""
 
@@ -51,6 +52,7 @@ def ge_div(dict_of_used_p_s_: Dict[int, int], num_cross_points_: List[int]) -> L
 
     return list_divisors
 
+
 def cht_from_chp(list_of_trucks_: List, list_of_packages_: List, ch_p: List[int]) -> List[List[int]]:
     """Make left part of chromosome: ch_t from right part of chromosome: ch_p"""
     ch_t = [[-1] for i in range(len(list_of_trucks_))]  # empty truck's chromosome
@@ -83,4 +85,19 @@ def get_counter(list_divisors_: List[List[int]]) -> List[int]:
     del value
 
     return counter
+
+
+def find_divisors(dict_of_pack_sto: Dict[int, int]) -> Dict[int, List[int]]:
+    final_dict = {}
+    for ind, item in dict_of_pack_sto.items():
+        i = 1
+        temp_list = []
+        while i <= item:
+            if item % i == 0:
+                temp_list.append(i)
+            i = i + 1
+        final_dict[ind] = temp_list
+
+    return final_dict
+
 

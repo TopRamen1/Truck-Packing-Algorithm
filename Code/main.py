@@ -1,60 +1,127 @@
 from algorithm_data import DataFromFile
 from algorithm_data import MainStorage
-
-from algorithm import init_pop, fitness, selection, print_pop, cross_pop, mutation, genetic_alg
+import algorithm as al
+import extra_functions as ex_fun
+from tkinter import *
 
 if __name__ == '__main__':
-    """
-    data = DataFromFile("data/test1/p.txt", "data/test1/t.txt", "data/test1/s.txt")
+    root = Tk()
+    root.title("Truck Packing Algorithm GUI")
+    root.geometry("1000x1000")
+    label1 = Label(root, text="\nEnter the data for the algorithm to work...")
+    label1.pack()
 
-    storage = MainStorage(data)
+    name_test_num = StringVar()
+    name_num_it = StringVar()
+    name_pop_it = StringVar()
+    name_div = StringVar()
 
-    print(storage)
-
-    pop = init_pop(storage, 3)
-
-    for i in pop:
-        print(i)
-
-    """
-
-    """
-        data = DataFromFile("data/test2/p.txt", "data/test2/t.txt", "data/test2/s.txt", 2)
-    storage = MainStorage(data)
-
-    pop = init_pop(storage, 20)
-
-    # print_pop(pop, "Populacja po inicjalizacji:")
-
-    pop = fitness(storage, pop)
-
-    print_pop(pop, "Populacja po ocenie:")
-
-    pop = selection(storage, pop)
-
-    print_pop(pop, "Populacja po selekcji:")
-
-    pop = cross_pop(storage, pop, [2, 2, 2])
-
-    print_pop(pop, "Population after cross:")
-
-    # newest_pop = mutation(storage, pop)
-    #
-    # print_pop(newest_pop, "Population after mutation:")
-    """
-
-    data = DataFromFile("data/test2/p.txt", "data/test2/t.txt", "data/test2/s.txt", 2)
-    storage = MainStorage(data)
+    data, storage, d, iter_al, pop_al, cross_al = None, None, None, None, None, None  # d is a dictionary of used storages and packages
+    logic_val1, logic_val2, logic_val3, logic_val4 = False, False, False, False
 
 
-    genetic_alg(storage, 20, 100)
+    def submit1():
+        global data, storage, d, logic_val1
+        ind = name_test_num.get()
+        if ind.isnumeric():
+            root2 = Tk()
+            root2.title("List of used packages and storages")
+            root2.geometry("300x200+1005+0")
+            Label(root, text=f"       Confirmation: Your data set is: test{ind}.txt         ").place(x=600, y=80)
+
+            data = DataFromFile(f"data/test{ind}/p.txt", f"data/test{ind}/t.txt", f"data/test{ind}/s.txt", int(ind))
+            storage = MainStorage(data)
+            d = storage.get_used_sto_pack
+            it = 10
+            for i, j in d.items():
+                Label(root2, text=f"Number of packages to storage no. {i}:       {j}").place(x=10, y=it)
+                it += 20
+            logic_val1 = True
+        else:
+            Label(root, text="Enter correct data, the name should be a number\t").place(x=600, y=80)
 
 
+    def submit2():
+        global logic_val2, iter_al
+        ind = name_num_it.get()
+        if ind.isnumeric():
+            Label(root, text=f"Confirmation: Number of algorithm iteration is: {ind}               \t").place(x=600,
+                                                                                                              y=117)
+            logic_val2 = True
+            iter_al = ind
+        else:
+            Label(root, text="Enter correct data, the name should be a number\t").place(x=600, y=117)
 
 
+    def submit3():
+        global logic_val3, pop_al
+        ind = name_pop_it.get()
+        if ind.isnumeric():
+            Label(root, text=f"        Confirmation: Number of population is: {ind}                  \t").place(x=600,
+                                                                                                                y=157)
+            logic_val3 = True
+            pop_al = ind
+        else:
+            Label(root, text="Enter correct data, the name should be a number\t").place(x=600, y=157)
 
 
+    def submit4():
+        global logic_val4, cross_al
+        ind = name_div.get()
+        dict_of_cuts = ex_fun.find_divisors(d)
+        data_temp = ind.strip()
+        temp = data_temp.split(',')
+        checking_list = []
+        for i in temp:
+            checking_list.append(int(i))
+        if len(checking_list) < len(d):
+            Label(root, text=f"                   Too low number of cuts                          ").place(x=600, y=210)
+        elif len(checking_list) > len(d):
+            Label(root, text=f"                   Too much number of cuts                         ").place(x=600, y=210)
+        elif len(checking_list) == len(d):
+            counter = 0
+            for i, val in enumerate(checking_list):
+                if val in dict_of_cuts[i]:
+                    counter += 1
+            if counter == len(d):
+                Label(root, text=f"Confirmation: Number of crossing points is: {ind}                      ").place(
+                    x=600, y=210)
+                logic_val4 = True
+                cross_al = []
+                for i, j in enumerate(temp):
+                    cross_al.append(int(j))
+            else:
+                Label(root, text=f"             One or more of cut(s) is incorrect                 ").place(x=600,
+                                                                                                            y=210)
 
 
+    def submit5():
+        logic_tuple = logic_val1, logic_val2, logic_val3, logic_val4
+        logic_final = all(logic_tuple)
+        if logic_final:
+            print(cross_al)
+            al.genetic_alg(storage, int(iter_al), int(pop_al), cross_al)
 
 
+    test_num = Label(root, text="Test number in the library: /Code/data:  ").place(x=10, y=80)
+    test_num = Label(root, text="test").place(x=290, y=80)
+    test_num = Label(root, text=".txt").place(x=355, y=80)
+    test_num_user_area = Entry(root, textvariable=name_test_num, width=3).place(x=320, y=77)
+    test_num_button = Button(root, text="Submit", command=submit1).place(x=450, y=77)
+
+    num_it = Label(root, text="Number of algorithm iteration:  ").place(x=10, y=120)
+    num_it_user_area = Entry(root, textvariable=name_num_it, width=3).place(x=320, y=117)
+    num_it_button = Button(root, text="Submit", command=submit2).place(x=450, y=117)
+
+    pop_it = Label(root, text="Number of population:  ").place(x=10, y=160)
+    pop_it_user_area = Entry(root, textvariable=name_pop_it, width=3).place(x=320, y=157)
+    pop_it_button = Button(root, text="Submit", command=submit3).place(x=450, y=157)
+
+    div = Label(root, text="Enter number of crossing points (decline ").place(x=10, y=200)
+    div = Label(root, text="the values with commas:").place(x=10, y=220)
+    div_user_area = Entry(root, textvariable=name_div, width=10).place(x=320, y=207)
+    div_button = Button(root, text="Submit", command=submit4).place(x=450, y=207)
+
+    alg_button = Button(root, text="Start algorithm", command=submit5).place(x=430, y=300)
+
+    root.mainloop()
