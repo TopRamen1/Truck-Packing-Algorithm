@@ -1,3 +1,4 @@
+from tkinter.font import Font
 from algorithm_data import DataFromFile
 from algorithm_data import MainStorage
 import algorithm as al
@@ -7,7 +8,7 @@ from tkinter import *
 if __name__ == '__main__':
     root = Tk()
     root.title("Truck Packing Algorithm GUI")
-    root.geometry("1000x1000")
+    root.geometry("1000x400")
     label1 = Label(root, text="\nEnter the data for the algorithm to work...")
     label1.pack()
 
@@ -54,15 +55,15 @@ if __name__ == '__main__':
 
 
     def submit3():
+        """Command responsible for number of population in algorithm"""
         global logic_val3, pop_al
         ind = name_pop_it.get()
         if ind.isnumeric():
-            Label(root, text=f"        Confirmation: Number of population is: {ind}                  \t").place(x=600,
-                                                                                                                y=157)
+            Label(root, text=f"\tConfirmation: Number of population is: {ind}\t\t\t").place(x=580, y=160)
             logic_val3 = True
             pop_al = ind
         else:
-            Label(root, text="Enter correct data, the name should be a number\t").place(x=600, y=157)
+            Label(root, text="\tEnter correct data, the name should be a number\t").place(x=550, y=160)
 
 
     def submit4():
@@ -99,29 +100,35 @@ if __name__ == '__main__':
         logic_tuple = logic_val1, logic_val2, logic_val3, logic_val4
         logic_final = all(logic_tuple)
         if logic_final:
-            print(cross_al)
             al.genetic_alg(storage, int(iter_al), int(pop_al), cross_al)
 
 
-    test_num = Label(root, text="Test number in the library: /Code/data:  ").place(x=10, y=80)
-    test_num = Label(root, text="test").place(x=290, y=80)
-    test_num = Label(root, text=".txt").place(x=355, y=80)
-    test_num_user_area = Entry(root, textvariable=name_test_num, width=3).place(x=320, y=77)
-    test_num_button = Button(root, text="Submit", command=submit1).place(x=450, y=77)
+    # display interface responsible for number of test
+    Label(root, text="Test number in the library: /Code/data:  ").place(x=10, y=80)
+    Label(root, text="test").place(x=290, y=80)
+    Label(root, text=".txt").place(x=355, y=80)
+    Entry(root, textvariable=name_test_num, width=3).place(x=320, y=77.5)
+    Button(root, text="Submit", command=submit1).place(x=450, y=77.5)
 
-    num_it = Label(root, text="Number of algorithm iteration:  ").place(x=10, y=120)
-    num_it_user_area = Entry(root, textvariable=name_num_it, width=3).place(x=320, y=117)
-    num_it_button = Button(root, text="Submit", command=submit2).place(x=450, y=117)
+    # display interface responsible for number of algorithm iteration
+    Label(root, text="Number of algorithm iteration:  ").place(x=10, y=120)
+    Entry(root, textvariable=name_num_it, width=3).place(x=320, y=117.5)
+    Button(root, text="Submit", command=submit2).place(x=450, y=117.5)
 
-    pop_it = Label(root, text="Number of population:  ").place(x=10, y=160)
-    pop_it_user_area = Entry(root, textvariable=name_pop_it, width=3).place(x=320, y=157)
-    pop_it_button = Button(root, text="Submit", command=submit3).place(x=450, y=157)
+    # display interface responsible for number of population in algorithm
+    Label(root, text="Number of population:  ").place(x=10, y=160)
+    Entry(root, textvariable=name_pop_it, width=3).place(x=320, y=157.5)
+    Button(root, text="Submit", command=submit3).place(x=450, y=157.5)
 
-    div = Label(root, text="Enter number of crossing points (decline ").place(x=10, y=200)
-    div = Label(root, text="the values with commas:").place(x=10, y=220)
-    div_user_area = Entry(root, textvariable=name_div, width=10).place(x=320, y=207)
-    div_button = Button(root, text="Submit", command=submit4).place(x=450, y=207)
+    # display interface responsible for number of crossing points in algorithm
+    Label(root, text="Enter number of crossing points (decline ").place(x=10, y=200)
+    Label(root, text="the values with commas:").place(x=10, y=220)
+    Entry(root, textvariable=name_div, width=10).place(x=320, y=207)
+    Button(root, text="Submit", command=submit4).place(x=450, y=207)
 
-    alg_button = Button(root, text="Start algorithm", command=submit5).place(x=430, y=300)
+    # display interface responsible for starting algorithm work
+    newFont = Font(family="Courier New", size=25, weight="bold")
+    alg_button = Button(root, font=newFont, text="Start algorithm", command=submit5,
+                        height=5, width=30, bd=2).place(x=260, y=235)
 
     root.mainloop()
