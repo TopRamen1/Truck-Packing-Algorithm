@@ -78,11 +78,16 @@ def genetic_alg(data: MainStorage, it_num: int, pop_size: int, div: List[int], d
         plt.plot(range(len(av_sol_vec)), av_sol_vec, label='średnia')
         plt.show()
 
-    # p_to_t = [[]]*len(best_sol.ch_t)
-    # print(p_to_t)
-    # print(best_sol)
-    # for i in range(0, len(best_sol.ch_p)):
-    #     p_to_t[best_sol.ch_p[i]].append(i)
+    p_to_t = {}
+    print(p_to_t)
+    print(best_sol)
+    for i in range(0, len(best_sol.ch_p)):
+        if best_sol.ch_p[i] in p_to_t.keys():
+            p_to_t[best_sol.ch_p[i]].append(i)
+        else:
+            p_to_t[best_sol.ch_p[i]] = [i]
+
+
 
     return p_to_t
 
