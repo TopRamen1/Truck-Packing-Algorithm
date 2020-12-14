@@ -356,7 +356,8 @@ def crossover(data: MainStorage, ind1, ind2, num_cross_points: List[int]) -> Tup
     # print(out1, out2)
 
     # print_pop([Individual(ch_t1, ch_p1), Individual(ch_t2, ch_p2)], "Population after crossover and fix:")
-
+    print(len(ch_p1))
+    print(len(data.list_of_packages))
     return children
 
 

@@ -1,4 +1,6 @@
 from typing import List, Tuple, Dict
+import os
+import random
 
 
 class DataFromFile:
@@ -163,3 +165,33 @@ class MainStorage:
                     dict_of_used_p_s[s] = c
 
         return dict_of_used_p_s
+
+def create_testfile(number_of_tests: int, number_of_storages: int):
+    for i in range(number_of_tests):
+        directory = 'data/test%d' % (i+1)
+        try:
+            os.mkdir(directory)
+            print("Directory ", 'test%d' % (i+1), " created ")
+        except FileExistsError:
+            print("Directory ", 'test%d' % (i+1), " already exists")
+        f = open("%s/p.txt" % directory, "w+")
+        f2 = open("%s/t.txt" % directory, "w+")
+        f3 = open("%s/s.txt" % directory, "w+")
+
+        for e in range(number_of_storages):
+            f3.write("%d:%e\n" % (e, random.randint(100, 1000)))
+
+        number_of_packages = random.randint(50, 200)
+        print(number_of_packages)
+        for a in range(number_of_packages):
+            f.write("%d:%e\n" % (random.randint(0, number_of_storages-1), random.randint(100, 2000)))
+            x = random.randint(1, 4)
+            if x == 1:
+                f2.write("A:1000.0:4.23:14.0:19.56\n")
+            if x == 2:
+                f2.write("B:1500.0:4.78:21.3:32.0\n")
+            if x == 3:
+                f2.write("C:2000.0:5.1:24.0:35.32\n")
+            if x == 4:
+                f2.write("D:2500.0:5.16:26.4:39.8\n")
+
