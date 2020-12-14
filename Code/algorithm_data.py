@@ -166,8 +166,8 @@ class MainStorage:
 
         return dict_of_used_p_s
 
-def create_testfile(number_of_tests: int, number_of_storages: int):
-    for i in range(number_of_tests):
+def create_testfile(num_of_tests: int, num_of_packages: int, package_intervals: List[int], num_of_storages: int, storage_intervals: List[int]):
+    for i in range(num_of_tests):
         directory = 'data/test%d' % (i+1)
         try:
             os.mkdir(directory)
@@ -178,13 +178,11 @@ def create_testfile(number_of_tests: int, number_of_storages: int):
         f2 = open("%s/t.txt" % directory, "w+")
         f3 = open("%s/s.txt" % directory, "w+")
 
-        for e in range(number_of_storages):
-            f3.write("%d:%e\n" % (e, random.randint(100, 1000)))
+        for e in range(num_of_storages):
+            f3.write("%d:%e\n" % (e, random.randint(storage_intervals[0], storage_intervals[1])))
 
-        number_of_packages = random.randint(50, 200)
-        print(number_of_packages)
-        for a in range(number_of_packages):
-            f.write("%d:%e\n" % (random.randint(0, number_of_storages-1), random.randint(100, 2000)))
+        for a in range(num_of_packages):
+            f.write("%d:%e\n" % (random.randint(0, num_of_storages-1), random.randint(package_intervals[0], package_intervals[1])))
             x = random.randint(1, 4)
             if x == 1:
                 f2.write("A:1000.0:4.23:14.0:19.56\n")
