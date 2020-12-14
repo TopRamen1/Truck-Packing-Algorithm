@@ -96,8 +96,8 @@ class Truck:
 class Storage:
     def __init__(self, id_: int, address_: int, distance_: float):
         self.id = id_
-        self.distance = distance_
         self.address = address_
+        self.distance = distance_
 
     def __str__(self) -> str:
         return f"Storage no. {self.id}, Address: {self.address}, Distance: {self.distance}".format(self=self)
@@ -108,20 +108,21 @@ class Storage:
 
 
 class MainStorage:
-    def __init__(self, data_init_: DataFromFile):
+    def __init__(self, data_init_: DataFromFile = None):
         self.list_of_packages = []
         self.list_of_trucks = []
         self.list_of_storages = []
         self.k = 4.5  # fuel price
 
-        for i in data_init_.get_package_data():
-            self.list_of_packages.append(Package(i[0], i[1], i[2]))
+        if data_init_:
+            for i in data_init_.get_package_data():
+                self.list_of_packages.append(Package(i[0], i[1], i[2]))
 
-        for i in data_init_.get_truck_data():
-            self.list_of_trucks.append(Truck(i[0], i[1], i[2], i[3], i[4], i[5]))
+            for i in data_init_.get_truck_data():
+                self.list_of_trucks.append(Truck(i[0], i[1], i[2], i[3], i[4], i[5]))
 
-        for i in data_init_.get_storage_data():
-            self.list_of_storages.append(Storage(i[0], i[1], i[2]))
+            for i in data_init_.get_storage_data():
+                self.list_of_storages.append(Storage(i[0], i[1], i[2]))
 
     def __iter__(self):
         return iter(self.list_of_packages)
