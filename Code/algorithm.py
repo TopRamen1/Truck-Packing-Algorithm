@@ -2,7 +2,7 @@ from algorithm_data import MainStorage
 import extra_functions as ex_fun
 from typing import List, Tuple
 import random
-
+import matplotlib.pyplot as plt
 
 class Individual:
     """
@@ -30,34 +30,61 @@ class Individual:
 
 
 # TODO: dodac wiecej scenariuszy testowych (plików)
-def genetic_alg(data: MainStorage, it_num: int, pop_size: int, div: List[int]):
+def genetic_alg(data: MainStorage, it_num: int, pop_size: int, div: List[int], debug: bool = False, plot: bool = False):
     """
 
     """
+
+    av_sol_vec = []
+    best_sol_vec = []
+
     pop = init_pop(data, pop_size)
 
-    pop = fitness(data, pop)
+    pop, best_sol, best_val, av_sol = fitness(data, pop)
+
+    av_sol_vec.append(av_sol)
+    best_sol_vec.append(best_sol.obj_fcn)
 
     pop = selection(data, pop)
 
-    print_pop(pop, "Populacja po inicjalizacji:")
+    print_pop(pop, "Populacja po inicjalizacji:", debug)
 
-    i = 0
+    i = 1
 
-    while i < it_num:
+    while i <= it_num:
         pop = cross_pop(data, pop, div)
 
         pop = mutation(data, pop)
 
-        pop = fitness(data, pop)
+        pop, it_best_sol, it_best_val, av_sol = fitness(data, pop)
+
+        if it_best_sol.obj_fcn < best_sol.obj_fcn:
+            best_sol = it_best_sol
+
+        av_sol_vec.append(av_sol)
+        best_sol_vec.append(best_sol.obj_fcn)
 
         pop = selection(data, pop)
 
-        print_pop(pop, "Populacja po iteracji: {}".format(i))
+        print_pop(pop, "Populacja po iteracji: {}".format(i), debug)
 
         i += 1
 
-    pass
+    # print_pop(pop, "Populacja końcowa".format(i))
+
+    if plot:
+        plt.plot(range(len(best_sol_vec)), best_sol_vec, label='rozwiązania')
+        plt.show()
+        plt.plot(range(len(av_sol_vec)), av_sol_vec, label='średnia')
+        plt.show()
+
+    # p_to_t = [[]]*len(best_sol.ch_t)
+    # print(p_to_t)
+    # print(best_sol)
+    # for i in range(0, len(best_sol.ch_p)):
+    #     p_to_t[best_sol.ch_p[i]].append(i)
+
+    return p_to_t
 
 
 def obj_fcn(data_mst: MainStorage, data_ind: Individual):
@@ -217,7 +244,9 @@ def fitness(data: MainStorage, pop: List[Individual]):
 
     obj_fcn_vals.sort(key=lambda e: e[1])
 
-    print(sum3 / len(obj_fcn_vals))
+
+    av_sol = sum3 / len(obj_fcn_vals)
+    # print(sum3 / len(obj_fcn_vals))
 
     sum2 = 0
     j = len(obj_fcn_vals)
@@ -227,7 +256,10 @@ def fitness(data: MainStorage, pop: List[Individual]):
         sum2 += j / sum1
         j -= 1
 
-    return pop
+    best_sol = pop[obj_fcn_vals[0][0]]
+    best_val = best_sol.obj_fcn
+
+    return pop, best_sol, best_val, av_sol
 
 
 def selection(data: MainStorage, pop: List[Individual]):
@@ -417,7 +449,7 @@ def fix_ind(ch_t: List[List[int]], ch_p: List[int], data: MainStorage):
 def mutation(data: MainStorage, pop: List[Individual]) -> List[Individual]:
     random_ind = []
     duplications = []
-    probability = len(pop) * 0.02
+    probability = len(pop) * 0.25
     while len(random_ind) < probability:
         for i in range(int(probability)):
             x = random.choice(range(0, len(pop), 1))
@@ -451,15 +483,17 @@ def mutation_helper(pop: List[Individual], random_ind: List[int]) -> List[List[L
     return new_ch_t
 
 
-def print_pop(pop: List[Individual], text: str):
-    print(text)
+def print_pop(pop: List[Individual], text: str, p: bool):
+    if p:
+        print(text)
 
-    j = 0
-    for i in pop:
-        print(j, i)
-        j += 1
+        j = 0
+        for i in pop:
+            print(j, i)
+            j += 1
 
-    print('\n')
+        print('\n')
+
 
 
 if __name__ == '__main__':
