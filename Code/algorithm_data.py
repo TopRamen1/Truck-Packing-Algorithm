@@ -86,6 +86,7 @@ class Truck:
         self.min_fuel_use = min_fuel_use_
         self.max_fuel_use = max_fuel_use_
         # 1:16.6, 2:22.7, 3:28.8, 4:34.9, 5:41, 6:47.1, 7:53.2, 8:59.1,
+
     def __str__(self) -> str:
         return f"Truck no. {self.id}, Type: {self.type_t}, Load: {self.load}, Exploitation: {self.exp_cost}, Min. " \
                f"combustion: {self.min_fuel_use}, Max. combustion: {self.max_fuel_use}".format(self=self)
@@ -167,14 +168,16 @@ class MainStorage:
 
         return dict_of_used_p_s
 
-def create_testfile(num_of_tests: int, num_of_packages: int, package_intervals: List[int], num_of_storages: int, storage_intervals: List[int]):
+
+def create_testfile(num_of_tests: int, num_of_packages: int, package_intervals: List[int], num_of_storages: int,
+                    storage_intervals: List[int]):
     for i in range(num_of_tests):
-        directory = 'data/test%d' % (i+1)
+        directory = 'data/test%d' % (i + 1)
         try:
             os.mkdir(directory)
-            print("Directory ", 'test%d' % (i+1), " created ")
+            print("Directory ", 'test%d' % (i + 1), " created ")
         except FileExistsError:
-            print("Directory ", 'test%d' % (i+1), " already exists")
+            print("Directory ", 'test%d' % (i + 1), " already exists")
         f = open("%s/p.txt" % directory, "w+")
         f2 = open("%s/t.txt" % directory, "w+")
         f3 = open("%s/s.txt" % directory, "w+")
@@ -183,7 +186,8 @@ def create_testfile(num_of_tests: int, num_of_packages: int, package_intervals: 
             f3.write("%d:%e\n" % (e, random.randint(storage_intervals[0], storage_intervals[1])))
 
         for a in range(num_of_packages):
-            f.write("%d:%e\n" % (random.randint(0, num_of_storages-1), random.randint(package_intervals[0], package_intervals[1])))
+            f.write("%d:%e\n" % (
+            random.randint(0, num_of_storages - 1), random.randint(package_intervals[0], package_intervals[1])))
             x = random.randint(1, 4)
             if x == 1:
                 f2.write("A:1000.0:4.23:14.0:19.56\n")
@@ -194,13 +198,27 @@ def create_testfile(num_of_tests: int, num_of_packages: int, package_intervals: 
             if x == 4:
                 f2.write("D:2500.0:5.16:26.4:39.8\n")
 
+
 def CSV_Reader() -> List[List[int]]:
     cols = ["Population", "Iteration", "Crossing", "Mutation"]
-    col_reader = pd.read_csv("data/lgorythm_data.csv", delimiter=';', names=cols)
+    col_reader = pd.read_csv("data/algorythm_data.csv", delimiter=';', names=cols)
     pop = col_reader.Population.to_list()
     it = col_reader.Iteration.to_list()
     cross = col_reader.Crossing.to_list()
     mut = col_reader.Mutation.to_list()
     del (pop[0], it[0], cross[0], mut[0])
     return [pop, it, cross, mut]
+
+
+def csv_writer(*args):
+    """Create final file with all values created from the operation of the algorithm
+    :param args: dicts which contain name and list of values, for example: {"population": [40,50,60,70,80]}"""
+    data = ()
+    columns = []
+    for i in args:
+        for key, value in i.items():
+            columns.append(key)
+            data += (value,)
+    file = pd.DataFrame(list(data)).T
+    file.to_csv('data/algorithm_results.csv', header=columns)
 

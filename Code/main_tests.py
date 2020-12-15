@@ -5,41 +5,23 @@ from algorithm_data import *
 
 
 class AlgorithmTests(unittest.TestCase):
-    #     def test_init_pop_1(self):
-    #         n = 3
-    #
-    #         data = DataFromFile("data/test1/p.txt", "data/test1/t.txt", "data/test1/s.txt")
-    #
-    #         storage = MainStorage(data)
-    #
-    #         print(storage)
-    #
-    #         pop = init_pop(storage, n)
-    #
-    #         for i in pop:
-    #             print(i)
-    #
-    #         self.assertEqual(len(pop), n)
-    #         for i in pop:
-    #             self.assertEqual(8, i.get_ch_len())
-    #
-    #     def test_init_pop_2(self):
-    #         n = 3
-    #
-    #         data = DataFromFile("data/test2/p.txt", "data/test2/t.txt", "data/test2/s.txt")
-    #
-    #         storage = MainStorage(data)
-    #
-    #         print(storage)
-    #
-    #         pop = init_pop(storage, n)
-    #
-    #         for i in pop:
-    #             print(i)
-    #
-    #         self.assertEqual(len(pop), n)
-    #         for i in pop:
-    #             self.assertEqual(17, i.get_ch_len())
+    def test_init_pop_1(self):
+        n = 3  # population size
+        data = DataFromFile("data/test1/p.txt", "data/test1/t.txt", "data/test1/s.txt", 2)
+
+        storage = MainStorage(data)
+
+        print(storage)
+
+        pop = init_pop(storage, n)
+
+        for i in pop:
+            print(i)
+
+        self.assertEqual(len(pop), n)
+        for i in pop:
+            self.assertEqual(8, i.get_ch_len())
+
     def test_obj_fcn_1(self):
         storage = MainStorage(None)
         storage.k = 5
