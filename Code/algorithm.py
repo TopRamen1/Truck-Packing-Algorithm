@@ -3,6 +3,7 @@ import extra_functions as ex_fun
 from typing import List, Tuple
 import random
 import matplotlib.pyplot as plt
+from copy import deepcopy
 
 class Individual:
     """
@@ -30,7 +31,7 @@ class Individual:
 
 
 # TODO: dodac wiecej scenariuszy testowych (plików)
-def genetic_alg(data: MainStorage, it_num: int, pop_size: int, div: List[int], debug: bool = False, plot: bool = False):
+def genetic_alg(data: MainStorage, it_num: int, pop_size: int, cross: float, mut: float, div: List[int], debug: bool = False, plot: bool = False, desc: str = ""):
     """
 
     """
@@ -52,17 +53,19 @@ def genetic_alg(data: MainStorage, it_num: int, pop_size: int, div: List[int], d
     i = 1
 
     while i <= it_num:
-        pop = cross_pop(data, pop, div)
+        pop = cross_pop(data, pop, div, cross)
 
-        pop = mutation(data, pop)
+        pop = mutation(data, pop, mut)
 
         pop, it_best_sol, it_best_val, av_sol = fitness(data, pop)
 
         if it_best_sol.obj_fcn < best_sol.obj_fcn:
-            best_sol = it_best_sol
+            best_sol = deepcopy(it_best_sol)
 
         av_sol_vec.append(av_sol)
         best_sol_vec.append(best_sol.obj_fcn)
+        # print(it_best_sol.obj_fcn, "it best")
+        # print(best_sol.obj_fcn, "best")
 
         pop = selection(data, pop)
 
@@ -73,21 +76,28 @@ def genetic_alg(data: MainStorage, it_num: int, pop_size: int, div: List[int], d
     # print_pop(pop, "Populacja końcowa".format(i))
 
     if plot:
-        plt.plot(range(len(best_sol_vec)), best_sol_vec, label='rozwiązania')
-        plt.show()
         plt.plot(range(len(av_sol_vec)), av_sol_vec, label='średnia')
+        plt.title("Średnia wartość funkcji celu dla {}".format(desc))
+        plt.ylabel("wartość")
+        plt.xlabel("iteracje")
+        plt.show()
+        plt.plot(range(len(best_sol_vec)), best_sol_vec, label='rozwiązania')
+        plt.title("Wartość najlepszego rozwiązania {}".format(desc))
+        plt.ylabel("wartość")
+        plt.xlabel("iteracje")
         plt.show()
 
+
     p_to_t = {}
-    print(p_to_t)
-    print(best_sol)
+    # print(p_to_t)
+    # print(best_sol)
     for i in range(0, len(best_sol.ch_p)):
         if best_sol.ch_p[i] in p_to_t.keys():
             p_to_t[best_sol.ch_p[i]].append(i)
         else:
             p_to_t[best_sol.ch_p[i]] = [i]
 
-
+    # print(p_to_t)
 
     return p_to_t
 
@@ -103,7 +113,7 @@ def obj_fcn(data_mst: MainStorage, data_ind: Individual):
 
     # sum_2:
     for i in act_truck_pos:
-        sum_2 += data_mst.list_of_storages[data_ind.ch_t[i]].distance * data_mst.k * \
+        sum_2 += data_mst.list_of_storages[data_ind.ch_t[i]].distance / 100 * data_mst.k * \
                  data_mst.list_of_trucks[i].min_fuel_use
 
     # sum_3:
@@ -112,7 +122,7 @@ def obj_fcn(data_mst: MainStorage, data_ind: Individual):
         for j in act_package_pos:
             if i == data_ind.ch_p[j]:
                 sum_packages += data_mst.list_of_packages[j].weight
-        sum_3 += data_mst.list_of_storages[data_ind.ch_t[i]].distance * data_mst.k * \
+        sum_3 += data_mst.list_of_storages[data_ind.ch_t[i]].distance / 100 * data_mst.k * \
                  (data_mst.list_of_trucks[i].max_fuel_use - data_mst.list_of_trucks[i].min_fuel_use) * \
                  (sum_packages / data_mst.list_of_trucks[i].load)
 
@@ -261,7 +271,7 @@ def fitness(data: MainStorage, pop: List[Individual]):
         sum2 += j / sum1
         j -= 1
 
-    best_sol = pop[obj_fcn_vals[0][0]]
+    best_sol = deepcopy(pop[obj_fcn_vals[0][0]])
     best_val = best_sol.obj_fcn
 
     return pop, best_sol, best_val, av_sol
@@ -342,7 +352,7 @@ def crossover(data: MainStorage, ind1, ind2, num_cross_points: List[int]) -> Tup
     ch_t1 = ex_fun.cht_from_chp(data.list_of_trucks, data.list_of_packages, ch_p1)
     ch_t2 = ex_fun.cht_from_chp(data.list_of_trucks, data.list_of_packages, ch_p2)
 
-    children = (Individual(ch_t1, ch_p1), Individual(ch_t2, ch_p2))
+    # children = (Individual(ch_t1, ch_p1), Individual(ch_t2, ch_p2))
 
     # print_pop([Individual(ch_t1, ch_p1), Individual(ch_t2, ch_p2)], "Population after crossover:")
 
@@ -356,19 +366,28 @@ def crossover(data: MainStorage, ind1, ind2, num_cross_points: List[int]) -> Tup
     # print(out1, out2)
 
     # print_pop([Individual(ch_t1, ch_p1), Individual(ch_t2, ch_p2)], "Population after crossover and fix:")
-    print(len(ch_p1))
-    print(len(data.list_of_packages))
+    # print(len(ch_p1))
+    # print(len(data.list_of_packages))
     return children
 
 
-def cross_pop(data: MainStorage, pop: List[Individual], num_cross_points: List[int]):
+def cross_pop(data: MainStorage, pop: List[Individual], num_cross_points: List[int], cross_factor: float):
     i = 0
     new_pop = []
-    while i < len(pop):
+    while i < len(pop) * cross_factor:
         p1 = crossover(data, pop[i], pop[i+1], num_cross_points)
         new_pop.append(p1[0])
         new_pop.append(p1[1])
         i += 2
+
+    while len(new_pop) < len(pop):
+        r = random.random()
+        prob = 0
+        for i in pop:
+            prob += i.prob
+            if prob > r:
+                new_pop.append(i)
+                break
 
     return new_pop
 
@@ -452,10 +471,10 @@ def fix_ind(ch_t: List[List[int]], ch_p: List[int], data: MainStorage):
 
 
 # TODO: Mutacja - WOJTEK
-def mutation(data: MainStorage, pop: List[Individual]) -> List[Individual]:
+def mutation(data: MainStorage, pop: List[Individual], mutation_factor: float) -> List[Individual]:
     random_ind = []
     duplications = []
-    probability = len(pop) * 0.25
+    probability = len(pop) * mutation_factor
     while len(random_ind) < probability:
         for i in range(int(probability)):
             x = random.choice(range(0, len(pop), 1))

@@ -107,7 +107,7 @@ if __name__ == '__main__':
         logic_tuple = logic_val1, logic_val2, logic_val3, logic_val4
         logic_final = all(logic_tuple)
         if logic_final:
-            al.genetic_alg(storage, int(iter_al), int(pop_al), cross_al)  # start working algorithm
+            al.genetic_alg(storage, int(iter_al), int(pop_al), 0.9, 0.05, cross_al, False, True)  # start working algorithm
 
 
     # Display interface responsible for number of test

@@ -54,7 +54,7 @@ class AlgorithmTests(unittest.TestCase):
         result = obj_fcn(storage, pop1)
         decimals = 3
 
-        self.assertEqual((lambda n, dec: math.ceil(n * 10 ** dec) / (10 ** dec))(result, decimals), 72335.429)
+        self.assertEqual((lambda n, dec: math.ceil(n * 10 ** dec) / (10 ** dec))(result, decimals), 737.215)
 
 
 if __name__ == '__main__':
