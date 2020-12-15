@@ -1,6 +1,7 @@
 from typing import List, Tuple, Dict
 import os
 import random
+import pandas as pd
 
 
 class DataFromFile:
@@ -192,4 +193,14 @@ def create_testfile(num_of_tests: int, num_of_packages: int, package_intervals: 
                 f2.write("C:2000.0:5.1:24.0:35.32\n")
             if x == 4:
                 f2.write("D:2500.0:5.16:26.4:39.8\n")
+
+def CSV_Reader() -> List[List[int]]:
+    cols = ["Population", "Iteration", "Crossing", "Mutation"]
+    col_reader = pd.read_csv("data/lgorythm_data.csv", delimiter=';', names=cols)
+    pop = col_reader.Population.to_list()
+    it = col_reader.Iteration.to_list()
+    cross = col_reader.Crossing.to_list()
+    mut = col_reader.Mutation.to_list()
+    del (pop[0], it[0], cross[0], mut[0])
+    return [pop, it, cross, mut]
 

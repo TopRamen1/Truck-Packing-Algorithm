@@ -488,8 +488,8 @@ def mutation(data: MainStorage, pop: List[Individual], mutation_factor: float) -
         for id2, j in enumerate(random_ind):
             if id == j:
                 new_ch_p = i.ch_p[:]
-                gen_x = random.choice(range(0, len(data.list_of_packages), 1))
-                x = random.choice(range(0, len(data.list_of_trucks), 1))
+                gen_x = random.choice(range(0, len(data.list_of_packages)-1, 1))
+                x = random.choice(range(0, len(data.list_of_trucks)-1, 1))
                 new_ch_p[gen_x] = x
                 ch_t_list[id2][x].append(data.list_of_packages[gen_x].address)
                 i.ch_t, i.ch_p = fix_ind(ch_t_list[id2], new_ch_p, data)
