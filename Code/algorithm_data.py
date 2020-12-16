@@ -172,7 +172,7 @@ class MainStorage:
 def create_testfile(num_of_tests: int, num_of_packages: int, package_intervals: List[int], num_of_storages: int,
                     storage_intervals: List[int]):
     for i in range(num_of_tests):
-        directory = 'data/test%d' % (i + 1)
+        directory = 'data_random/test%d' % (i + 1)
         try:
             os.mkdir(directory)
             print("Directory ", 'test%d' % (i + 1), " created ")
@@ -201,7 +201,7 @@ def create_testfile(num_of_tests: int, num_of_packages: int, package_intervals: 
 
 def CSV_Reader() -> List[List[int]]:
     cols = ["Population", "Iteration", "Crossing", "Mutation"]
-    col_reader = pd.read_csv("data/algorythm_data.csv", delimiter=';', names=cols)
+    col_reader = pd.read_csv("params/algorythm_data.csv", delimiter=';', names=cols)
     pop = col_reader.Population.to_list()
     it = col_reader.Iteration.to_list()
     cross = col_reader.Crossing.to_list()

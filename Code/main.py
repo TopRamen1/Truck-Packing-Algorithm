@@ -3,7 +3,7 @@ from algorithm_data import MainStorage
 import algorithm as al
 
 if __name__ == '__main__':
-    #create_testfile(10, 5)  # dla 5 magazynów 10 testów
+    # create_testfile(10, 10, [10, 1000], 4, [10, 1000])  # dla 5 magazynów 10 testów
     data = DataFromFile("data/test2/p.txt", "data/test2/t.txt", "data/test2/s.txt", 2)
     storage = MainStorage(data)
 
