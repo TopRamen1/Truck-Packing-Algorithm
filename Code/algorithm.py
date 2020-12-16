@@ -26,8 +26,8 @@ class Individual:
     def __str__(self):
         return str(self.ch_t) + ' ' + str(self.ch_p) + ' ' + str(self.prob) + ' ' + str(self.obj_fcn) + ' ' + str(len(self.ch_p))
 
-    def get_ch_len(self):
-        return len(self.ch_t) + len(self.ch_p)
+    # def get_ch_len(self):
+    #     return len(self.ch_t) + len(self.ch_p)
 
 
 # TODO: dodac wiecej scenariuszy testowych (plików)
@@ -295,7 +295,8 @@ def selection(data: MainStorage, pop: List[Individual]):
     return new_pop
 
 
-def crossover(data: MainStorage, ind1, ind2, num_cross_points: List[int]) -> Tuple[Individual, Individual]:
+def crossover(data: MainStorage, ind1: Individual, ind2: Individual, num_cross_points: List[int]) -> \
+        Tuple[Individual, Individual]:
     pop = [ind1, ind2]
 
     # print_pop(pop, "Population to crossover:")
@@ -316,8 +317,6 @@ def crossover(data: MainStorage, ind1, ind2, num_cross_points: List[int]) -> Tup
 
     # generate lists which tells you which genes to take from a particular parent
     rand_lst1, rand_lst2 = ex_fun.ge_rand(list_divisors, num_cross_points)
-    # print(rand_lst1)
-    # print(rand_lst2)
 
     # generate start position of each part of package(split based on address) and number of cuts of chromosome(crossing)
     pos = ex_fun.get_position(dict_of_used_p_s)
@@ -363,11 +362,7 @@ def crossover(data: MainStorage, ind1, ind2, num_cross_points: List[int]) -> Tup
 
     # out1 = check_lims(data, children[0])
     # out2 = check_lims(data, children[1])
-    # print(out1, out2)
 
-    # print_pop([Individual(ch_t1, ch_p1), Individual(ch_t2, ch_p2)], "Population after crossover and fix:")
-    # print(len(ch_p1))
-    # print(len(data.list_of_packages))
     return children
 
 
