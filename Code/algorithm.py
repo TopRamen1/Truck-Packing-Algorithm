@@ -41,12 +41,21 @@ def genetic_alg(data: MainStorage, it_num: int, pop_size: int, cross: float, mut
 
     pop = init_pop(data, pop_size)
 
+    for id, i in enumerate(pop):
+        print("Osobnik: ", id, " ; Po inicjalizacji populacji:", len(i.ch_p))
+
     pop, best_sol, best_val, av_sol = fitness(data, pop)
+
+    for id, i in enumerate(pop):
+        print("Osobnik: ", id, " ; Po wstępnej selekcji:", len(i.ch_p))
 
     av_sol_vec.append(av_sol)
     best_sol_vec.append(best_sol.obj_fcn)
 
     pop = selection(data, pop)
+
+    #for i in pop:
+        #print("3. Po selekcji: ", len(i.ch_p))
 
     print_pop(pop, "Populacja po inicjalizacji:", debug)
 
@@ -274,6 +283,9 @@ def fitness(data: MainStorage, pop: List[Individual]):
     best_sol = deepcopy(pop[obj_fcn_vals[0][0]])
     best_val = best_sol.obj_fcn
 
+    #for i in pop:
+        #print("2. Po dopasowaniu: ", len(i.ch_p))
+
     return pop, best_sol, best_val, av_sol
 
 
@@ -291,6 +303,9 @@ def selection(data: MainStorage, pop: List[Individual]):
             if prob > r:
                 new_pop.append(i)
                 break
+
+    #for i in new_pop:
+        #print("2. Po selekcji: ", len(i.ch_p))
 
     return new_pop
 
@@ -367,6 +382,8 @@ def crossover(data: MainStorage, ind1: Individual, ind2: Individual, num_cross_p
 
 
 def cross_pop(data: MainStorage, pop: List[Individual], num_cross_points: List[int], cross_factor: float):
+    #for id, i in enumerate(pop):
+        #print("Osobnik: ", id, " ; Krzyżowanie dostaje dlugosc:", len(i.ch_p))
     i = 0
     new_pop = []
     while i < len(pop) * cross_factor:
@@ -383,6 +400,9 @@ def cross_pop(data: MainStorage, pop: List[Individual], num_cross_points: List[i
             if prob > r:
                 new_pop.append(i)
                 break
+
+    #for id, i in enumerate(pop):
+        #print("Osobnik: ", id, " ; Krzyżowanie zwraca dlugosc:", len(i.ch_p))
 
     return new_pop
 
@@ -467,6 +487,8 @@ def fix_ind(ch_t: List[List[int]], ch_p: List[int], data: MainStorage):
 
 # TODO: Mutacja - WOJTEK
 def mutation(data: MainStorage, pop: List[Individual], mutation_factor: float) -> List[Individual]:
+    #for id, i in enumerate(pop):
+        #print("Osobnik: ", id, "; Mutacja dostaje dlugosc: ", len(i.ch_p))
     random_ind = []
     duplications = []
     probability = len(pop) * mutation_factor
@@ -478,23 +500,23 @@ def mutation(data: MainStorage, pop: List[Individual], mutation_factor: float) -
                 duplications.append(x)
             if len(random_ind) == probability:
                 break
-    print("0. Indeksy losowych osobników: ", random_ind)
+    #print("0. Indeksy losowych osobników: ", random_ind)
     ch_t_list = mutation_helper(pop, random_ind)
-    print("1. ch_t_list: ", ch_t_list)
+    #print("1. ch_t_list: ", ch_t_list)
     for id, i in enumerate(pop):
         for id2, j in enumerate(random_ind):
             if id == j:
                 new_ch_p = i.ch_p.copy()
-                print("2. old_chp: ", i.ch_p)
-                print("3. new_chp: ", new_ch_p)
+                #print("Osobnik: ", id, "Dlugosc dostarczonego ch_p", len(i.ch_p))
+                #print("Osobnik: ", id, "Dlugosc nowego ch_p", len(new_ch_p))
                 gen_x = random.choice(range(0, len(data.list_of_packages), 1))
-                print("4. Idx wylosowanej paczki: ", gen_x)
+                #print("4. Idx wylosowanej paczki: ", gen_x)
                 x = random.choice(range(0, len(data.list_of_trucks), 1))
-                print("5. Idx wylosowanego trucka: ", x)
+                #print("5. Idx wylosowanego trucka: ", x)
                 new_ch_p[gen_x] = x
-                print("6. Zmodyfikowane chp: ", new_ch_p)
+                #print("6. Zmodyfikowane chp: ", new_ch_p)
                 ch_t_list[id2][x].append(data.list_of_packages[gen_x].address)
-                print("7. Zmodyfikowane ch_t_list: ", ch_t_list)
+                #print("7. Zmodyfikowane ch_t_list: ", ch_t_list)
                 i.ch_t, i.ch_p = fix_ind(ch_t_list[id2], new_ch_p, data)
     return pop
 
