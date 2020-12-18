@@ -8,7 +8,7 @@ if __name__ == '__main__':
     storage = MainStorage(data)
 
     # params :            data, its, pop, cross, mut , div_pts, debug, plot
-    sol1 = al.genetic_alg(storage, 40, 100, 0.7, 0.05, [1, 2, 2], False, True, "param 1")
+    sol1 = al.genetic_alg(storage, 40, 5000, 0.7, 0.05, [1, 2, 2], False, True, "param 1")
 
     sol2 = al.genetic_alg(storage, 40, 20, 0.5, 0.45, [1, 2, 2], False, True, "param 2")
 

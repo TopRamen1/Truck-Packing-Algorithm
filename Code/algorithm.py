@@ -478,15 +478,23 @@ def mutation(data: MainStorage, pop: List[Individual], mutation_factor: float) -
                 duplications.append(x)
             if len(random_ind) == probability:
                 break
+    print("0. Indeksy losowych osobników: ", random_ind)
     ch_t_list = mutation_helper(pop, random_ind)
+    print("1. ch_t_list: ", ch_t_list)
     for id, i in enumerate(pop):
         for id2, j in enumerate(random_ind):
             if id == j:
                 new_ch_p = i.ch_p.copy()
+                print("2. old_chp: ", i.ch_p)
+                print("3. new_chp: ", new_ch_p)
                 gen_x = random.choice(range(0, len(data.list_of_packages), 1))
+                print("4. Idx wylosowanej paczki: ", gen_x)
                 x = random.choice(range(0, len(data.list_of_trucks), 1))
+                print("5. Idx wylosowanego trucka: ", x)
                 new_ch_p[gen_x] = x
-                ch_t_list[id2-1][x].append(data.list_of_packages[gen_x].address)
+                print("6. Zmodyfikowane chp: ", new_ch_p)
+                ch_t_list[id2][x].append(data.list_of_packages[gen_x].address)
+                print("7. Zmodyfikowane ch_t_list: ", ch_t_list)
                 i.ch_t, i.ch_p = fix_ind(ch_t_list[id2], new_ch_p, data)
     return pop
 
