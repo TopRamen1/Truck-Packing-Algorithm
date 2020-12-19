@@ -199,9 +199,9 @@ def create_testfile(num_of_tests: int, num_of_packages: int, package_intervals: 
                 f2.write("D:2500.0:5.16:26.4:39.8\n")
 
 
-def CSV_Reader() -> List[List[int]]:
+def csv_reader(directory: str) -> List[List[int]]:
     cols = ["Population", "Iteration", "Crossing", "Mutation"]
-    col_reader = pd.read_csv("params/algorythm_data.csv", delimiter=';', names=cols)
+    col_reader = pd.read_csv(directory, delimiter=';', names=cols)
     pop = col_reader.Population.to_list()
     it = col_reader.Iteration.to_list()
     cross = col_reader.Crossing.to_list()

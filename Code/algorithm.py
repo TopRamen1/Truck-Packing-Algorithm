@@ -108,7 +108,7 @@ def genetic_alg(data: MainStorage, it_num: int, pop_size: int, cross: float, mut
 
     # print(p_to_t)
 
-    return p_to_t
+    return p_to_t, best_sol_vec, av_sol_vec
 
 
 def obj_fcn(data_mst: MainStorage, data_ind: Individual):
