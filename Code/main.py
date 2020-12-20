@@ -29,11 +29,12 @@ if __name__ == '__main__':
         av_best_sols = av_best_sols + best_sol_val
         j += 1
 
-
     av_best_sols = av_best_sols / 100
-    print(best_sols)
+    print("The best solution in every iteration: ", best_sols)
     std_der_best_sols = np.std(best_sols, ddof=1, axis=0)
 
+    # 1 arg: number of data instance, 2 arg: number of data parameters, 3 and more args: dict
+    al_d.csv_writer(1, 2, {" average best sol": av_sol_val}, {"num pop": params[0]})
 
     plt.scatter(range(len(av_best_sols)), av_best_sols, label='średnia')
 

@@ -41,13 +41,13 @@ def genetic_alg(data: MainStorage, it_num: int, pop_size: int, cross: float, mut
 
     pop = init_pop(data, pop_size)
 
-    for id, i in enumerate(pop):
-        print("Osobnik: ", id, " ; Po inicjalizacji populacji:", len(i.ch_p))
+    # for id, i in enumerate(pop):
+    #     print("Osobnik: ", id, " ; Po inicjalizacji populacji:", len(i.ch_p))
 
     pop, best_sol, best_val, av_sol = fitness(data, pop)
 
-    for id, i in enumerate(pop):
-        print("Osobnik: ", id, " ; Po wstępnej selekcji:", len(i.ch_p))
+    # for id, i in enumerate(pop):
+    #     print("Osobnik: ", id, " ; Po wstępnej selekcji:", len(i.ch_p))
 
     av_sol_vec.append(av_sol)
     best_sol_vec.append(best_sol.obj_fcn)
@@ -342,19 +342,11 @@ def crossover(data: MainStorage, ind1: Individual, ind2: Individual, num_cross_p
     for num, it in enumerate(list_divisors):
         for i in rand_lst1[num]:
             pos_t = pos[num]
-            # if it[i] < it[i - 1]:
-            #     ch_p1[i + counter[num]] = pop[0].ch_p[pos[num + 1] - 1]
-            #     ch_p2[i + counter[num]] = pop[1].ch_p[pos[num + 1] - 1]
-            # else:
             ch_p1[i + counter[num]] = pop[0].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
             ch_p2[i + counter[num]] = pop[1].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
 
         for i in rand_lst2[num]:
             pos_t = pos[num]
-            # if it[i] < it[i - 1]:
-            #     ch_p1[i + counter[num]] = pop[1].ch_p[pos[num + 1] - 1]
-            #     ch_p2[i + counter[num]] = pop[0].ch_p[pos[num + 1] - 1]
-            # else:
             ch_p1[i + counter[num]] = pop[1].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
             ch_p2[i + counter[num]] = pop[0].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
 

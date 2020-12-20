@@ -15,10 +15,6 @@ class DataFromFile:
         return f"ID of dataset: {self.id_dataset} -> Names: '{self.filename1},'{self.filename2}','{self.filename3}'" \
             .format(self=self)
 
-    # @classmethod
-    # def from_file_id(cls, *args):
-    #     return cls(*args, [int(i) for i in args[0] if i.isdigit()])
-
     def get_package_data(self) -> List[Tuple[int, int, float]]:
         """ Extract data from .txt file into list of tuples, tuples contain information about packages: ID,
         address and weight """
@@ -85,7 +81,6 @@ class Truck:
         self.exp_cost = exp_cost_
         self.min_fuel_use = min_fuel_use_
         self.max_fuel_use = max_fuel_use_
-        # 1:16.6, 2:22.7, 3:28.8, 4:34.9, 5:41, 6:47.1, 7:53.2, 8:59.1,
 
     def __str__(self) -> str:
         return f"Truck no. {self.id}, Type: {self.type_t}, Load: {self.load}, Exploitation: {self.exp_cost}, Min. " \
@@ -210,9 +205,10 @@ def csv_reader(directory: str) -> List[List[int]]:
     return [pop, it, cross, mut]
 
 
-def csv_writer(*args):
+def csv_writer(ins: int, num_param: int, *args):
     """Create final file with all values created from the operation of the algorithm
-    :param args: dicts which contain name and list of values, for example: {"population": [40,50,60,70,80]}"""
+       :param args: number of data instance, number of data parameters, dicts which contain name and list of values -
+                    {"str": List[int]}"""
     data = ()
     columns = []
     for i in args:
@@ -220,5 +216,5 @@ def csv_writer(*args):
             columns.append(key)
             data += (value,)
     file = pd.DataFrame(list(data)).T
-    file.to_csv('data/algorithm_results.csv', header=columns)
+    file.to_csv(f'outputs/instance{ins}_param{num_param}.csv', header=columns)
 
