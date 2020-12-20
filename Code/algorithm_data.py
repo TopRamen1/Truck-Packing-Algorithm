@@ -2,6 +2,7 @@ from typing import List, Tuple, Dict
 import os
 import random
 import pandas as pd
+import numpy as np
 
 
 class DataFromFile:
@@ -202,19 +203,29 @@ def csv_reader(directory: str) -> List[List[int]]:
     cross = col_reader.Crossing.to_list()
     mut = col_reader.Mutation.to_list()
     del (pop[0], it[0], cross[0], mut[0])
-    return [pop, it, cross, mut]
+    return [it, pop, cross, mut]
 
 
 def csv_writer(ins: int, num_param: int, *args):
     """Create final file with all values created from the operation of the algorithm
        :param args: number of data instance, number of data parameters, dicts which contain name and list of values -
-                    {"str": List[int]}"""
+                    {"str": List[int (or str)]}"""
     data = ()
     columns = []
     for i in args:
         for key, value in i.items():
             columns.append(key)
             data += (value,)
-    file = pd.DataFrame(list(data)).T
-    file.to_csv(f'outputs/instance{ins}_param{num_param}.csv', header=columns)
+
+    df = pd.DataFrame(list(data)).T
+
+    # For all parameters fill empty cells char: "
+    for k, i in enumerate(args):
+        for key, value in i.items():
+            if len(value) == 1:
+                df[k].replace(np.nan, ' " ', inplace=True)
+
+    index = df.index
+    index.name = "Iteration"
+    df.to_csv(f'outputs/instance{ins}_param{num_param}.csv', header=columns)
 

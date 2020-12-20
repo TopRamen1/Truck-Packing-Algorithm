@@ -5,32 +5,28 @@ import random
 import matplotlib.pyplot as plt
 from copy import deepcopy
 
+
 class Individual:
-    """
-    Class containing individual chromosome and rating
-    """
+    """Class containing individual chromosome and rating"""
 
-    def __init__(self, ch_t: List[int], ch_p: List[int], prob: float = 0):
+    def __init__(self, ch_t_: List[int], ch_p_: List[int], prob_: float = 0):
         """
-        :param ch_t: part dedicated to showing which truck goes where
-        :param ch_p: part representing which package goes to which truck
-        :param prob: probability of choosing this individual
+        :param ch_t_: part dedicated to showing which truck goes where
+        :param ch_p_: part representing which package goes to which truck
+        :param prob_: probability of choosing this individual
         """
 
-        self.ch_t = ch_t
-        self.ch_p = ch_p
+        self.ch_t = ch_t_
+        self.ch_p = ch_p_
 
         self.obj_fcn = 0
-        self.prob = prob
+        self.prob = prob_
 
     def __str__(self):
-        return str(self.ch_t) + ' ' + str(self.ch_p) + ' ' + str(self.prob) + ' ' + str(self.obj_fcn) + ' ' + str(len(self.ch_p))
-
-    # def get_ch_len(self):
-    #     return len(self.ch_t) + len(self.ch_p)
+        return str(self.ch_t) + ' ' + str(self.ch_p) + ' ' + str(self.prob) + ' ' + str(self.obj_fcn) + ' ' + \
+               str(len(self.ch_p))
 
 
-# TODO: dodac wiecej scenariuszy testowych (plików)
 def genetic_alg(data: MainStorage, it_num: int, pop_size: int, cross: float, mut: float, div: List[int], debug: bool = False, plot: bool = False, desc: str = ""):
     """
 
@@ -479,8 +475,6 @@ def fix_ind(ch_t: List[List[int]], ch_p: List[int], data: MainStorage):
 
 # TODO: Mutacja - WOJTEK
 def mutation(data: MainStorage, pop: List[Individual], mutation_factor: float) -> List[Individual]:
-    #for id, i in enumerate(pop):
-        #print("Osobnik: ", id, "; Mutacja dostaje dlugosc: ", len(i.ch_p))
     random_ind = []
     duplications = []
     probability = len(pop) * mutation_factor
@@ -535,7 +529,6 @@ def print_pop(pop: List[Individual], text: str, p: bool):
             j += 1
 
         print('\n')
-
 
 
 if __name__ == '__main__':
