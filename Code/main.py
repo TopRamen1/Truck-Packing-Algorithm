@@ -12,18 +12,17 @@ if __name__ == '__main__':
 
     """Main loop which start algorithm for every parameter for one, specific data instance"""
     iter_alg = 10  # number of iteration (it's not iteration of algorithm) to average data
-    for i in range(len(params[0]) - 3):  # TODO: 3 jest tymczasowo zeby skrocic czas dzialania algo
+    for i in range(len(params[0])):
         best_sol_val_out = []
         av_sol_val_out = []
 
         j = 0
         while j < iter_alg:
-            sol_in, best_sol_val_in, av_sol_val_in = al.genetic_alg(storage, int(params[0][i]) - 1, int(params[1][i]),
-                                                                    float(params[2][i]), float(params[3][i]), [1, 2, 2],
-                                                                    False, False, "For data parameters: {}".format(i))
+            _, best_sol_val_in, av_sol_val_in = al.genetic_alg(storage, int(params[0][i]) - 1, int(params[1][i]),
+                                                               float(params[2][i]), float(params[3][i]), [1, 2, 2],
+                                                               False, False, "For data parameters: {}".format(i))
             best_sol_val_out.append(best_sol_val_in)
             av_sol_val_out.append(av_sol_val_in)
-
             j += 1
 
         # Converting lists to arrays
@@ -34,19 +33,11 @@ if __name__ == '__main__':
         mean_best = np.mean(best_sol_m, axis=0)  # vector of best average solution
         mean_av = np.mean(av_sol_m, axis=0)  # vector of average of average solution
 
-        # Write data to csv files
-        al_d.csv_writer(1, i + 1, {"Average best solutions": mean_best},
-                        {"Average of average solutions": mean_av},
-                        {"P: Iteration": [params[0][i]]}, {"P: No. crossing points": ["1,2,3"]})  # 1 arg: number of
-        # data instance, 2 arg: number of data parameters, 3 and more args: dict
-
-
-
-
-
-
-
-
+        al_d.csv_writer(1, i + 1, {"Average best solutions": mean_best}, {"Average of average solutions": mean_av},
+                        {"P: Iteration": [params[0][i]]}, {"P: Population": [params[1][i]]},
+                        {"P: Probability of crossing": [params[2][i]]}, {"P: Probability of mutation": [params[3][i]]},
+                        {"P: No. crossing points": ["1,2,3"]})  # 1 arg: number of data instance, 2 arg: number of
+        # data parameters, 3 and more args: dict
 
     # print(len(best_sols), len(best_sol_val), len(av_best_sols))
     # av_best_sols = av_best_sols / iter_alg
