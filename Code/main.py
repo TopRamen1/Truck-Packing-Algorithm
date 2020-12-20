@@ -11,44 +11,56 @@ if __name__ == '__main__':
     params = al_d.csv_reader("parameters/instance1_param1.csv")
 
     """Main loop which start algorithm for every parameter for one, specific data instance"""
-    av_best_sols = np.zeros(21)
-    best_sols = []
-    av_sols_vec = []
-
-    print(params)
     iter_alg = 10  # number of iteration (it's not iteration of algorithm) to average data
-    for i in range(len(params[0])):
+    for i in range(len(params[0]) - 3):  # TODO: 3 jest tymczasowo zeby skrocic czas dzialania algo
+        best_sol_val_out = []
+        av_sol_val_out = []
+
         j = 0
         while j < iter_alg:
-            print(int(params[0][i]))
-            sol, best_sol_val, av_sol_val = al.genetic_alg(storage, int(params[0][i]), 50, 0.9, 0.1, [1, 2, 2], False,
-                                                           False, "param 1")
+            sol_in, best_sol_val_in, av_sol_val_in = al.genetic_alg(storage, int(params[0][i]) - 1, int(params[1][i]),
+                                                                    float(params[2][i]), float(params[3][i]), [1, 2, 2],
+                                                                    False, False, "For data parameters: {}".format(i))
+            best_sol_val_out.append(best_sol_val_in)
+            av_sol_val_out.append(av_sol_val_in)
 
-            # save best sols on every iteration
-            best_sols.append(best_sol_val)
-            #
-            best_sol_val = np.array(best_sol_val)
-            # add
-            av_best_sols = av_best_sols + best_sol_val
             j += 1
 
-        print(len(best_sols), len(best_sol_val), len(av_best_sols))
-        av_best_sols = av_best_sols / iter_alg
-        print("The best solution in every iteration: ", best_sols)
-        std_der_best_sols = np.std(best_sols, ddof=1, axis=0)
+        # Converting lists to arrays
+        best_sol_m = np.array(best_sol_val_out)  # matrix of best solution (rows: alg it. from params[0], cols: out it.)
+        av_sol_m = np.array(av_sol_val_out)  # matrix of average solution (rows: alg it. from params[0], cols: out it.)
 
-        # 1 arg: number of data instance, 2 arg: number of data parameters, 3 and more args: dict
-        al_d.csv_writer(1, i+1, {"Average best solutions": av_best_sols}, {"Average of average solutions": best_sol_val},
-                        {"P: Iteration": [params[0][i]]}, {"P: No. crossing points": ["1,2,3"]})
+        # Final vectors
+        mean_best = np.mean(best_sol_m, axis=0)  # vector of best average solution
+        mean_av = np.mean(av_sol_m, axis=0)  # vector of average of average solution
 
-    plt.scatter(range(len(av_best_sols)), av_best_sols, label='średnia')
+        # Write data to csv files
+        al_d.csv_writer(1, i + 1, {"Average best solutions": mean_best},
+                        {"Average of average solutions": mean_av},
+                        {"P: Iteration": [params[0][i]]}, {"P: No. crossing points": ["1,2,3"]})  # 1 arg: number of
+        # data instance, 2 arg: number of data parameters, 3 and more args: dict
 
-    plt.scatter(range(len(std_der_best_sols)), av_best_sols - std_der_best_sols, label='średnia')
-    plt.scatter(range(len(std_der_best_sols)), av_best_sols + std_der_best_sols, label='odch')
-    plt.title("Średnia naj wartość {}".format(0))
-    plt.ylabel("wartość")
-    plt.xlabel("iteracje")
-    plt.show()
+
+
+
+
+
+
+
+
+    # print(len(best_sols), len(best_sol_val), len(av_best_sols))
+    # av_best_sols = av_best_sols / iter_alg
+    # print("The best solution in every iteration: ", best_sols)
+    # std_der_best_sols = np.std(best_sols, ddof=1, axis=0)
+
+    # plt.scatter(range(len(av_best_sols)), av_best_sols, label='średnia')
+    #
+    # plt.scatter(range(len(std_der_best_sols)), av_best_sols - std_der_best_sols, label='średnia')
+    # plt.scatter(range(len(std_der_best_sols)), av_best_sols + std_der_best_sols, label='odch')
+    # plt.title("Średnia naj wartość {}".format(0))
+    # plt.ylabel("wartość")
+    # plt.xlabel("iteracje")
+    # plt.show()
 
     # sol_1, best_sols_1, av_sols_1 = al.genetic_alg(storage, 40, 100, 0.7, 0.05, [1, 2, 2], False, True, "param 1")
     #

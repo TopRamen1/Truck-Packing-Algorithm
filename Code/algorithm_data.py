@@ -198,8 +198,8 @@ def create_testfile(num_of_tests: int, num_of_packages: int, package_intervals: 
 def csv_reader(directory: str) -> List[List[int]]:
     cols = ["Population", "Iteration", "Crossing", "Mutation"]
     col_reader = pd.read_csv(directory, delimiter=';', names=cols)
-    pop = col_reader.Population.to_list()
     it = col_reader.Iteration.to_list()
+    pop = col_reader.Population.to_list()
     cross = col_reader.Crossing.to_list()
     mut = col_reader.Mutation.to_list()
     del (pop[0], it[0], cross[0], mut[0])
