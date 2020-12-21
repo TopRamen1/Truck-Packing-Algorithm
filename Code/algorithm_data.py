@@ -237,6 +237,8 @@ def csv_writer(ins: int, num_param: int, *args):
     df.to_csv(f'outputs/instance{ins}_param{num_param}.csv', header=columns)
 
 if __name__ == '__main__':
-    a = csv_reader_outputs("outputs/instance1_param1.csv")
-    df = pd.read_csv("outputs/instance1_param1.csv", usecols=[0, 1, 2], header=0)
-    print(a)
+    cols = ["P: Iteration"]
+    col_reader = pd.read_csv("outputs/instance1_param1.csv", delimiter=',').T
+    a= col_reader.to_dict('split')
+
+    print(a["data"][1])  # 2 wartosc tablicy to nr kolumny

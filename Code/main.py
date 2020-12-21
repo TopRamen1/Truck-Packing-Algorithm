@@ -76,6 +76,8 @@ if __name__ == '__main__':
 
     generate_stats(data_dir_, param_dir_, its_, title_, legend_, param_num_)
 
+
+
     # data = DataFromFile("data/instance1/p.txt", "data/instance1/t.txt", "data/instance1/s.txt", 2)
     # storage = MainStorage(data)
     # params = al_d.csv_reader_param("parameters/instance1_mute.csv")
