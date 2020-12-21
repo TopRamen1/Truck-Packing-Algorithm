@@ -195,15 +195,22 @@ def create_testfile(num_of_tests: int, num_of_packages: int, package_intervals: 
                 f2.write("D:2500.0:5.16:26.4:39.8\n")
 
 
-def csv_reader(directory: str) -> List[List[int]]:
-    cols = ["Population", "Iteration", "Crossing", "Mutation"]
+def csv_reader_param(directory: str) -> List[List[int]]:
+    cols = ["Iteration", "Population", "Crossing", "Mutation", "Crs1", "Crs2", "Crs3"]
     col_reader = pd.read_csv(directory, delimiter=';', names=cols)
     it = col_reader.Iteration.to_list()
     pop = col_reader.Population.to_list()
     cross = col_reader.Crossing.to_list()
     mut = col_reader.Mutation.to_list()
+    crs1 = col_reader.Crs1.to_list()
+    crs2 = col_reader.Crs2.to_list()
+    crs3 = col_reader.Crs3.to_list()
     del (pop[0], it[0], cross[0], mut[0])
-    return [it, pop, cross, mut]
+    return [it, pop, cross, mut, crs1, crs2, crs3]
+
+
+def csv_reader_outputs(directory: str) -> List[List[int]]:
+    pass
 
 
 def csv_writer(ins: int, num_param: int, *args):
@@ -229,3 +236,7 @@ def csv_writer(ins: int, num_param: int, *args):
     index.name = "Iteration"
     df.to_csv(f'outputs/instance{ins}_param{num_param}.csv', header=columns)
 
+if __name__ == '__main__':
+    a = csv_reader_outputs("outputs/instance1_param1.csv")
+    df = pd.read_csv("outputs/instance1_param1.csv", usecols=[0, 1, 2], header=0)
+    print(a)
