@@ -92,7 +92,10 @@ def genetic_alg(data: MainStorage, it_num: int, pop_size: int, cross: float, mut
         plt.xlabel("iteracje")
         plt.show()
 
+    return best_sol, best_sol_vec, av_sol_vec
 
+
+def print_sol(data: MainStorage, best_sol):
     p_to_t = {}
     # print(p_to_t)
     # print(best_sol)
@@ -104,7 +107,16 @@ def genetic_alg(data: MainStorage, it_num: int, pop_size: int, cross: float, mut
 
     # print(p_to_t)
 
-    return p_to_t, best_sol_vec, av_sol_vec
+    print("Koszt: ", best_sol.obj_fcn)
+
+    for k, v in p_to_t.items():
+        sum = 0
+        for e in v:
+            sum += data.list_of_packages[e].weight
+
+        print(k, "ladowność: ", data.list_of_trucks[k].load, ", paczki: ", v, " suma wag: ", sum, " adres: ", data.list_of_packages[v[0]].address)
+
+    return p_to_t
 
 
 def obj_fcn(data_mst: MainStorage, data_ind: Individual):
@@ -395,7 +407,6 @@ def cross_pop(data: MainStorage, pop: List[Individual], num_cross_points: List[i
     return new_pop
 
 
-# TODO: naprawa osobnika - NICOLAS
 def fix_ind(ch_t: List[List[int]], ch_p: List[int], data: MainStorage):
     # remove double adresses
     for t_id in range(len(ch_t)):
@@ -473,7 +484,6 @@ def fix_ind(ch_t: List[List[int]], ch_p: List[int], data: MainStorage):
     return ch_t, ch_p
 
 
-# TODO: Mutacja - WOJTEK
 def mutation(data: MainStorage, pop: List[Individual], mutation_factor: float) -> List[Individual]:
     random_ind = []
     duplications = []

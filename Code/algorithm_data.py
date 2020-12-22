@@ -209,8 +209,12 @@ def csv_reader_param(directory: str) -> List[List[int]]:
     return [it, pop, cross, mut, crs1, crs2, crs3]
 
 
-def csv_reader_outputs(directory: str) -> List[List[int]]:
-    pass
+def csv_reader_outputs(directory: str):
+    cols = ["P: Iteration"]
+    col_reader = pd.read_csv(directory, delimiter=',').T
+    a = col_reader.to_dict('split')
+
+    return a["data"][1], a["data"][2]
 
 
 def csv_writer(ins: int, num_param: int, *args):
@@ -239,6 +243,6 @@ def csv_writer(ins: int, num_param: int, *args):
 if __name__ == '__main__':
     cols = ["P: Iteration"]
     col_reader = pd.read_csv("outputs/instance1_param1.csv", delimiter=',').T
-    a= col_reader.to_dict('split')
+    a = col_reader.to_dict('split')
 
-    print(a["data"][1])  # 2 wartosc tablicy to nr kolumny
+    print(csv_reader_outputs("outputs/instance1_param1.csv"))

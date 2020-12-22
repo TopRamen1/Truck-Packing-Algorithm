@@ -5,6 +5,7 @@ import algorithm_data as al_d
 import matplotlib.pyplot as plt
 import numpy as np
 import time
+from copy import deepcopy
 
 
 def generate_stats(data_dir: str, param_dir: str, its: int, title, legend, param_num):
@@ -18,6 +19,7 @@ def generate_stats(data_dir: str, param_dir: str, its: int, title, legend, param
         best_sol_val_out = []
         av_sol_val_out = []
         av_time = 0
+        best_sol = al.Individual([], [])
 
         j = 0
         while j < iter_alg:
@@ -25,7 +27,7 @@ def generate_stats(data_dir: str, param_dir: str, its: int, title, legend, param
             start = time.time()
 
             # main algoritm function
-            _, best_sol_val_in, av_sol_val_in = al.genetic_alg(storage, int(params[0][i]) - 1, int(params[1][i]),
+            it_best_sol, best_sol_val_in, av_sol_val_in = al.genetic_alg(storage, int(params[0][i]) - 1, int(params[1][i]),
                                                                float(params[2][i]), float(params[3][i]), [1, 2, 2],
                                                                False, False, "For data parameters: {}".format(i))
             elapsed = time.time() - start
@@ -35,6 +37,13 @@ def generate_stats(data_dir: str, param_dir: str, its: int, title, legend, param
 
             best_sol_val_out.append(best_sol_val_in)
             av_sol_val_out.append(av_sol_val_in)
+
+            if not best_sol.ch_t:
+                best_sol = deepcopy(it_best_sol)
+
+            if it_best_sol.obj_fcn < best_sol.obj_fcn:
+                best_sol = deepcopy(it_best_sol)
+
             j += 1
 
         # calculate av time
@@ -58,6 +67,8 @@ def generate_stats(data_dir: str, param_dir: str, its: int, title, legend, param
 
         print("Średni czas dla zestawu {} to: {}".format(i, av_time))
 
+        al.print_sol(storage, best_sol)
+
         if i % len(params[0]) == len(params[0]) - 1:
             plt.title(title)
             plt.ylabel("wartość")
@@ -67,14 +78,49 @@ def generate_stats(data_dir: str, param_dir: str, its: int, title, legend, param
 
 
 if __name__ == '__main__':
-    data_dir_ = "data/instance1"
-    param_dir_ = "parameters/instance1_cross.csv"
-    title_ = "zmienne prawdopodobieństwo krzyrzowania"
-    legend_ = "Pr cross"
-    param_num_ = 2
-    its_ = 10
+    data_dir_ = "data/instance1"  # data file
+    param_dir_ = "parameters/instance1.csv"  # parameter file
+    title_ = "zmienna populacja"  # plot title
+    legend_ = "populacja"  # legend text
+    param_num_ = 1  # var for legend
+    its_ = 50  # num of iterations
 
     generate_stats(data_dir_, param_dir_, its_, title_, legend_, param_num_)
+
+    # data = DataFromFile("data/instance1/p.txt", "data/instance1/t.txt", "data/instance1/s.txt", 2)
+    # storage = MainStorage(data)
+    #
+    # sol, best_sol_val_in, av_sol_val_in = al.genetic_alg(storage, 30, 1000, 0.9, 0.2, [1, 2, 2], False, True, "For data parameters: {}".format(33))
+    #
+    # print(sol.obj_fcn)
+    # print(best_sol_val_in[-1])
+    #
+    # print(al.print_sol(storage, sol))
+
+    """
+    param for pop
+    """
+    # data_dir_ = "data/instance1"
+    # param_dir_ = "parameters/instance1_pop.csv"
+    # title_ = "zmienna populacja"
+    # legend_ = "populacja"
+    # param_num_ = 1
+    # its_ = 50
+    #
+    # generate_stats(data_dir_, param_dir_, its_, title_, legend_, param_num_)
+
+
+    """
+    param for cross
+    """
+    # data_dir_ = "data/instance1"
+    # param_dir_ = "parameters/instance1_cross.csv"
+    # title_ = "zmienne prawdopodobieństwo krzyrzowania"
+    # legend_ = "Pr cross"
+    # param_num_ = 2
+    # its_ = 100
+    #
+    # generate_stats(data_dir_, param_dir_, its_, title_, legend_, param_num_)
 
 
 
