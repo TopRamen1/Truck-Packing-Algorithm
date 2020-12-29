@@ -6,7 +6,15 @@ import numpy as np
 
 
 class DataFromFile:
+    """Class needed for work with files (.txt), which contains class function to return data from specific .txt file"""
+
     def __init__(self, filename_p: str, filename_t: str, filename_s: str, id_dataset_: int):
+        """
+        :param filename_p: filename with information about packages
+        :param filename_t: filename with information about trucks
+        :param filename_s: filename with information about storages
+        :param id_dataset_: dataset id
+        """
         self.filename1 = filename_p
         self.filename2 = filename_t
         self.filename3 = filename_s
@@ -17,8 +25,9 @@ class DataFromFile:
             .format(self=self)
 
     def get_package_data(self) -> List[Tuple[int, int, float]]:
-        """ Extract data from .txt file into list of tuples, tuples contain information about packages: ID,
-        address and weight """
+        """Extract data from .txt file into list of tuples, tuples contain information about packages: ID,
+           address and weight """
+
         data_package = []
         with open(self.filename1, "r") as reader:
             id_p = 0
@@ -31,8 +40,9 @@ class DataFromFile:
         return data_package
 
     def get_truck_data(self) -> List[Tuple[int, str, float, float, float, float]]:
-        """ Extract data from .txt file into list of tuples, tuples contain information about trucks: ID, type, load,
-        exploitation, minimal combustion, maximum combustion """
+        """Extract data from .txt file into list of tuples, tuples contain information about trucks: ID, type, load,
+           exploitation, minimal combustion, maximum combustion"""
+
         truck_package = []
         with open(self.filename2, "r") as reader:
             id_t = 0
@@ -45,8 +55,9 @@ class DataFromFile:
         return truck_package
 
     def get_storage_data(self) -> List[Tuple[int, int, float]]:
-        """ Extract data from .txt file into list of tuples, tuples contain information about storages: ID, address,
-        distance from main storage """
+        """Extract data from .txt file into list of tuples, tuples contain information about storages: ID, address,
+           distance from main storage"""
+
         storage_package = []
         with open(self.filename3, "r") as reader:
             id_s = 0
@@ -60,7 +71,14 @@ class DataFromFile:
 
 
 class Package:
+    """Class needed for create packages and information about them"""
+
     def __init__(self, id_: int, address_: int, weight_: float):
+        """
+        :param id_: package id
+        :param address_: package address, information where specific package should be delivered
+        :param weight_: package weight
+        """
         self.id = id_
         self.address = address_
         self.weight = weight_
@@ -74,8 +92,18 @@ class Package:
 
 
 class Truck:
+    """Class needed for create trucks and information about them"""
+
     def __init__(self, id_: int, type_t_: str, load_: float, exp_cost_: float, min_fuel_use_: float,
                  max_fuel_use_: float):
+        """
+        :param id_: truck id
+        :param type_t_: type of truck (example: "A", "B:, ...)
+        :param load_: maximum load of truck
+        :param exp_cost_: virtual indicator which shows cost value of employment and operation of trucks
+        :param min_fuel_use_: min. combustion of trucks
+        :param max_fuel_use_: max. combustion of trucks
+        """
         self.id = id_
         self.type_t = type_t_
         self.load = load_
@@ -94,7 +122,14 @@ class Truck:
 
 
 class Storage:
+    """Class needed for create storages and information about them"""
+
     def __init__(self, id_: int, address_: int, distance_: float):
+        """
+        :param id_: storage id
+        :param address_: storage address (example: package with address: 1 goes to storage with address: 1)
+        :param distance_: distance from main storage to storage
+        """
         self.id = id_
         self.address = address_
         self.distance = distance_
@@ -108,7 +143,13 @@ class Storage:
 
 
 class MainStorage:
+    """Class needed for create main storage and all information about other smaller storages, trucks and packages"""
+
     def __init__(self, data_init_: DataFromFile = None):
+        """
+        :param data_init_: object class DataFromFile needed to initialize below Lists (example: list_of_packages - List
+                           of object class Package)
+        """
         self.list_of_packages = []
         self.list_of_trucks = []
         self.list_of_storages = []
@@ -137,7 +178,10 @@ class MainStorage:
                f"Number of storages: {len(self.list_of_storages)}".format(self=self)
 
     @property
-    def get_used_sto_pack(self) -> Dict[int, int]:
+    def get_used_sto_pack(self) -> Dict[int, List[int]]:
+        """Create dictionary which contain number of used storages (key) and number of package's addresses (value)
+           :return: above dictionary - Dict[int, List[int]]"""
+
         list_of_used_addresses = []
         list_of_used_storages = []  # list of active storages in case of there is a chance that there are storages
         # without any set of packages
@@ -219,8 +263,10 @@ def csv_reader_outputs(directory: str):
 
 def csv_writer(ins: int, num_param: int, *args):
     """Create final file with all values created from the operation of the algorithm
-       :param args: number of data instance, number of data parameters, dicts which contain name and list of values -
-                    {"str": List[int (or str)]}"""
+       :param ins: number of data instance
+       :param num_param: number of data parameters
+       :param args: dicts which contain name and list of values - Dict[str: List[int (or str)]]"""
+
     data = ()
     columns = []
     for i in args:
@@ -239,10 +285,3 @@ def csv_writer(ins: int, num_param: int, *args):
     index = df.index
     index.name = "Iteration"
     df.to_csv(f'outputs/instance{ins}_param{num_param}.csv', header=columns)
-
-if __name__ == '__main__':
-    cols = ["P: Iteration"]
-    col_reader = pd.read_csv("outputs/instance1_param1.csv", delimiter=',').T
-    a = col_reader.to_dict('split')
-
-    print(csv_reader_outputs("outputs/instance1_param1.csv"))
