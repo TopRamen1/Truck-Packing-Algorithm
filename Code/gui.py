@@ -3,7 +3,6 @@ import algorithm as al
 import extra_functions as ex_fun
 from tkinter import *
 from tkinter.font import Font
-from graphviz import Digraph
 
 if __name__ == '__main__':
     root = Tk()
@@ -128,10 +127,10 @@ if __name__ == '__main__':
                 temp_sum = 0
                 for e in v:
                     temp_sum += storage.list_of_packages[e].weight
-                    Label(root, text="{}. Truck id: {},  Load: {},  Packages: {},  Sum of weights: {},  Address: {}"
-                                     "\t\t\t\t\t\t\t".format(t, k, storage.list_of_trucks[k].load, v, temp_sum,
-                                                             storage.list_of_packages[v[0]].address)). \
-                        place(x=40, y=480 + t * 20)
+                    Label(root, text=f"{t}. Truck id: {k},  Load: {storage.list_of_trucks[k].load},  Packages: {v}, "
+                                     f"Sum of weights: {temp_sum},  Address: {storage.list_of_packages[v[0]].address}"
+                                     f"\t\t\t\t\t\t\t\t\t\t\t\t\t \n\n\n\n\n\n\n\n\n\n\n\n").place(x=40, y=480 + t * 20)
+        del p_to_t
 
     # Display interface responsible for number of test
     Label(root, text="Test number in the library: /Code/data:  ").place(x=10, y=80)
