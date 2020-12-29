@@ -28,30 +28,19 @@ class Individual:
 
 
 def genetic_alg(data: MainStorage, it_num: int, pop_size: int, cross: float, mut: float, div: List[int], debug: bool = False, plot: bool = False, desc: str = ""):
-    """
-
-    """
+    """Implementation of genetic algorithm
+    :return: printed solutions for each iteration and its plots"""
 
     av_sol_vec = []
     best_sol_vec = []
 
     pop = init_pop(data, pop_size)
-
-    # for id, i in enumerate(pop):
-    #     print("Osobnik: ", id, " ; Po inicjalizacji populacji:", len(i.ch_p))
-
     pop, best_sol, best_val, av_sol = fitness(data, pop)
-
-    # for id, i in enumerate(pop):
-    #     print("Osobnik: ", id, " ; Po wstępnej selekcji:", len(i.ch_p))
 
     av_sol_vec.append(av_sol)
     best_sol_vec.append(best_sol.obj_fcn)
 
     pop = selection(data, pop)
-
-    #for i in pop:
-        #print("3. Po selekcji: ", len(i.ch_p))
 
     print_pop(pop, "Populacja po inicjalizacji:", debug)
 
@@ -69,16 +58,12 @@ def genetic_alg(data: MainStorage, it_num: int, pop_size: int, cross: float, mut
 
         av_sol_vec.append(av_sol)
         best_sol_vec.append(best_sol.obj_fcn)
-        # print(it_best_sol.obj_fcn, "it best")
-        # print(best_sol.obj_fcn, "best")
 
         pop = selection(data, pop)
 
         print_pop(pop, "Populacja po iteracji: {}".format(i), debug)
 
         i += 1
-
-    # print_pop(pop, "Populacja końcowa".format(i))
 
     if plot:
         plt.plot(range(len(av_sol_vec)), av_sol_vec, label='średnia')
@@ -96,16 +81,15 @@ def genetic_alg(data: MainStorage, it_num: int, pop_size: int, cross: float, mut
 
 
 def print_sol(data: MainStorage, best_sol):
+    """Prints best solution"""
+
     p_to_t = {}
-    # print(p_to_t)
-    # print(best_sol)
+
     for i in range(0, len(best_sol.ch_p)):
         if best_sol.ch_p[i] in p_to_t.keys():
             p_to_t[best_sol.ch_p[i]].append(i)
         else:
             p_to_t[best_sol.ch_p[i]] = [i]
-
-    # print(p_to_t)
 
     print("Koszt: ", best_sol.obj_fcn)
 
@@ -122,20 +106,21 @@ def print_sol(data: MainStorage, best_sol):
 def obj_fcn(data_mst: MainStorage, data_ind: Individual) -> float:
     """Calculate function which describes our problem
        :return: value of above function"""
+
     act_truck_pos = [i for i, m in enumerate(data_ind.ch_t) if m != -1]  # truck's id who has defined storage
     act_package_pos = [j for j, p in enumerate(data_ind.ch_p)]  # package's id
     sum_1, sum_2, sum_3 = 0, 0, 0
 
-    # sum_1:
+    # Sum_1:
     for i in act_truck_pos:
         sum_1 += data_mst.list_of_trucks[i].exp_cost
 
-    # sum_2:
+    # Sum_2:
     for i in act_truck_pos:
         sum_2 += data_mst.list_of_storages[data_ind.ch_t[i]].distance / 100 * data_mst.k * \
                  data_mst.list_of_trucks[i].min_fuel_use
 
-    # sum_3:
+    # Sum_3:
     for i in act_truck_pos:
         sum_packages = 0
         for j in act_package_pos:
@@ -149,7 +134,6 @@ def obj_fcn(data_mst: MainStorage, data_ind: Individual) -> float:
 
     return final_result
 
-# TODO: dodać wiecej testów i (np długość chromosomu)
 class Exception1(Exception):
     def __init__(self, message="Przekroczono pierwszy warunek ograniczający"):
         self.message = message
@@ -169,6 +153,8 @@ class Exception3(Exception):
 
 
 def check_lims(data_mst: MainStorage, data_ind: Individual):
+    """Checks limits and raises exceptions"""
+
     act_package_pos = [j for j, p in enumerate(data_ind.ch_p)]
     act_truck_pos = [i for i, m in enumerate(data_ind.ch_t) if m != -1]
     sum_weights = 0
@@ -200,16 +186,17 @@ def check_lims(data_mst: MainStorage, data_ind: Individual):
 def random_chromosome(data: MainStorage):
     """Generates a random Chromosome for individual
     :return: random chromosome"""
-    # id lists for calculations
+
+    # Id lists for calculations
     storage_ids = list(range(0, len(data.list_of_storages)))
     truck_ids = list(range(0, len(data.list_of_trucks)))
     package_ids = list(range(0, len(data.list_of_packages)))
 
-    # init chromosome
+    # Init chromosome
     ch_t = [-1] * len(data.list_of_trucks)
     ch_p = [-1] * len(data.list_of_packages)
 
-    # sorted packages by address
+    # Sorted packages by address
     ids_by_address = [[] for i in range(len(storage_ids))]
     for p_id in package_ids:
         ids_by_address[data.list_of_packages[p_id].address].append(p_id)
@@ -221,18 +208,18 @@ def random_chromosome(data: MainStorage):
                     print("to many packages error")
                     return [0], [0]
 
-                t = data.list_of_trucks[random.choice(truck_ids)]  # random truck
+                t = data.list_of_trucks[random.choice(truck_ids)]  # Random truck
                 truck_ids.remove(t.id)
 
-                p = data.list_of_packages[random.choice(p_to_add)]  # random package
+                p = data.list_of_packages[random.choice(p_to_add)]  # Random package
 
-                ch_t[t.id] = p.address  # adding truck address to chromosome
+                ch_t[t.id] = p.address  # Adding truck address to chromosome
 
                 weight_sum = 0
                 while t.load >= weight_sum + p.weight:
                     weight_sum += p.weight
 
-                    ch_p[p.id] = t.id  # adding truck id for package in chromosome
+                    ch_p[p.id] = t.id  # Adding truck id for package in chromosome
 
                     package_ids.remove(p.id)
                     p_to_add.remove(p.id)
@@ -253,13 +240,13 @@ def init_pop(data: MainStorage, pop_size: int) -> List[Individual]:
     for i in range(0, pop_size):
         new_ch = random_chromosome(data)
         population.append(Individual(new_ch[0], new_ch[1]))
-
     return population
 
 
 def fitness(data: MainStorage, pop: List[Individual]):
     """Calculate probability for every individual using objective fcn
        :return: rated population"""
+
     sum1 = 0
     sum3 = 0
     obj_fcn_vals = []
@@ -270,10 +257,7 @@ def fitness(data: MainStorage, pop: List[Individual]):
         sum1 += i + 1
 
     obj_fcn_vals.sort(key=lambda e: e[1])
-
-
     av_sol = sum3 / len(obj_fcn_vals)
-    # print(sum3 / len(obj_fcn_vals))
 
     sum2 = 0
     j = len(obj_fcn_vals)
@@ -286,17 +270,13 @@ def fitness(data: MainStorage, pop: List[Individual]):
     best_sol = deepcopy(pop[obj_fcn_vals[0][0]])
     best_val = best_sol.obj_fcn
 
-    #for i in pop:
-        #print("2. Po dopasowaniu: ", len(i.ch_p))
-
     return pop, best_sol, best_val, av_sol
 
 
 def selection(data: MainStorage, pop: List[Individual]):
-    """
-    Select individuals based on probability calculated by fitness
-    :return: population to reproduce
-    """
+    """Select individuals based on probability calculated by fitness
+    :return: population to reproduce"""
+
     new_pop = []
     while len(new_pop) < len(pop):
         r = random.random()
@@ -306,9 +286,6 @@ def selection(data: MainStorage, pop: List[Individual]):
             if prob > r:
                 new_pop.append(i)
                 break
-
-    #for i in new_pop:
-        #print("2. Po selekcji: ", len(i.ch_p))
 
     return new_pop
 
@@ -375,8 +352,9 @@ def crossover(data: MainStorage, ind1: Individual, ind2: Individual, num_cross_p
 
 
 def cross_pop(data: MainStorage, pop: List[Individual], num_cross_points: List[int], cross_factor: float):
-    #for id, i in enumerate(pop):
-        #print("Osobnik: ", id, " ; Krzyżowanie dostaje dlugosc:", len(i.ch_p))
+    """Crossing children with old population
+    :return: new population"""
+
     i = 0
     new_pop = []
     while i < len(pop) * cross_factor:
@@ -384,7 +362,6 @@ def cross_pop(data: MainStorage, pop: List[Individual], num_cross_points: List[i
         new_pop.append(p1[0])
         new_pop.append(p1[1])
         i += 2
-
     while len(new_pop) < len(pop):
         r = random.random()
         prob = 0
@@ -393,15 +370,14 @@ def cross_pop(data: MainStorage, pop: List[Individual], num_cross_points: List[i
             if prob > r:
                 new_pop.append(i)
                 break
-
-    #for id, i in enumerate(pop):
-        #print("Osobnik: ", id, " ; Krzyżowanie zwraca dlugosc:", len(i.ch_p))
-
     return new_pop
 
 
 def fix_ind(ch_t: List[List[int]], ch_p: List[int], data: MainStorage):
-    # remove double adresses
+    """Fixes gens in chromosome ch_t
+    :return: modified chromosomes with no doubled addresses"""
+
+    # Remove double addresses
     for t_id in range(len(ch_t)):
         if len(ch_t[t_id]) > 1:
             a = random.choice(ch_t[t_id])
@@ -412,10 +388,7 @@ def fix_ind(ch_t: List[List[int]], ch_p: List[int], data: MainStorage):
 
     ch_t = ex_fun.flat_list(ch_t)
 
-    # print("\nremoved adresses")
-    # print(str(ch_t) + ' ' + str(ch_p))
-
-    # compute cargo weights
+    # Compute cargo weights
     cargo_w = [] * len(ch_t)
 
     for t_id in range(len(ch_t)):
@@ -426,10 +399,7 @@ def fix_ind(ch_t: List[List[int]], ch_p: List[int], data: MainStorage):
 
         cargo_w.append(w_sum)
 
-    # print("\ncomputet cargo weight")
-    # print(cargo_w)
-
-    # reomve packages from trucks if they are overloaded
+    # Remove packages from trucks if they are overloaded
     for t_id in range(len(ch_t)):
         if cargo_w[t_id] > data.list_of_trucks[t_id].load:
             p_to_truck = []
@@ -444,11 +414,7 @@ def fix_ind(ch_t: List[List[int]], ch_p: List[int], data: MainStorage):
                 ch_p[p_id] = -1
                 cargo_w[t_id] -= data.list_of_packages[p_id].weight
 
-    # print("\nremove overloaded")
-    # print(cargo_w)
-    # print(str(ch_t) + ' ' + str(ch_p))
-
-    # put all packages to place
+    # Put all packages to place
     for p_id in range(len(ch_p)):
         if ch_p[p_id] == -1:
             p = data.list_of_packages[p_id]
@@ -478,9 +444,14 @@ def fix_ind(ch_t: List[List[int]], ch_p: List[int], data: MainStorage):
 
 
 def mutation(data: MainStorage, pop: List[Individual], mutation_factor: float) -> List[Individual]:
+    """Mutates random gens with probability
+    :return: population with small percentage of mutated individuals"""
+
     random_ind = []
     duplications = []
     probability = len(pop) * mutation_factor
+
+    # Choose random individuals with probability
     while len(random_ind) < probability:
         for i in range(int(probability)):
             x = random.choice(range(0, len(pop), 1))
@@ -489,28 +460,25 @@ def mutation(data: MainStorage, pop: List[Individual], mutation_factor: float) -
                 duplications.append(x)
             if len(random_ind) == probability:
                 break
-    #print("0. Indeksy losowych osobników: ", random_ind)
+
     ch_t_list = mutation_helper(pop, random_ind)
-    #print("1. ch_t_list: ", ch_t_list)
+
+    # Mutate random gen in chromosome ch_p
     for id, i in enumerate(pop):
         for id2, j in enumerate(random_ind):
             if id == j:
                 new_ch_p = i.ch_p.copy()
-                #print("Osobnik: ", id, "Dlugosc dostarczonego ch_p", len(i.ch_p))
-                #print("Osobnik: ", id, "Dlugosc nowego ch_p", len(new_ch_p))
                 gen_x = random.choice(range(0, len(data.list_of_packages), 1))
-                #print("4. Idx wylosowanej paczki: ", gen_x)
                 x = random.choice(range(0, len(data.list_of_trucks), 1))
-                #print("5. Idx wylosowanego trucka: ", x)
                 new_ch_p[gen_x] = x
-                #print("6. Zmodyfikowane chp: ", new_ch_p)
                 ch_t_list[id2][x].append(data.list_of_packages[gen_x].address)
-                #print("7. Zmodyfikowane ch_t_list: ", ch_t_list)
                 i.ch_t, i.ch_p = fix_ind(ch_t_list[id2], new_ch_p, data)
     return pop
 
 
 def mutation_helper(pop: List[Individual], random_ind: List[int]) -> List[List[List[int]]]:
+    """Helper function"""
+
     new_ch_t = []
     for id, i in enumerate(pop):
         for j in random_ind:
@@ -523,14 +491,14 @@ def mutation_helper(pop: List[Individual], random_ind: List[int]) -> List[List[L
 
 
 def print_pop(pop: List[Individual], text: str, p: bool):
+    """Prints population"""
+
     if p:
         print(text)
-
         j = 0
         for i in pop:
             print(j, i)
             j += 1
-
         print('\n')
 
 

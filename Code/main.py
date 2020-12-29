@@ -23,16 +23,16 @@ def generate_stats(data_dir: str, param_dir: str, its: int, title, legend, param
 
         j = 0
         while j < iter_alg:
-            # start timer
+            # Start timer
             start = time.time()
 
-            # main algoritm function
+            # Main algorithm function
             it_best_sol, best_sol_val_in, av_sol_val_in = al.genetic_alg(storage, int(params[0][i]) - 1, int(params[1][i]),
                                                                float(params[2][i]), float(params[3][i]), [1, 2, 2],
                                                                False, False, "For data parameters: {}".format(i))
             elapsed = time.time() - start
 
-            # calculate sum of times
+            # Calculate sum of times
             av_time += elapsed
 
             best_sol_val_out.append(best_sol_val_in)
@@ -46,22 +46,22 @@ def generate_stats(data_dir: str, param_dir: str, its: int, title, legend, param
 
             j += 1
 
-        # calculate av time
+        # Calculate av time
         av_time = av_time / j
 
         # Converting lists to arrays
-        best_sol_m = np.array(best_sol_val_out)  # matrix of best solution (rows: alg it. from params[0], cols: out it.)
-        av_sol_m = np.array(av_sol_val_out)  # matrix of average solution (rows: alg it. from params[0], cols: out it.)
+        best_sol_m = np.array(best_sol_val_out)  # Matrix of best solution (rows: alg it. from params[0], cols: out it.)
+        av_sol_m = np.array(av_sol_val_out)  # Matrix of average solution (rows: alg it. from params[0], cols: out it.)
 
         # Final vectors
-        mean_best = np.mean(best_sol_m, axis=0)  # vector of best average solution
-        mean_av = np.mean(av_sol_m, axis=0)  # vector of average of average solution
+        mean_best = np.mean(best_sol_m, axis=0)  # Vector of best average solution
+        mean_av = np.mean(av_sol_m, axis=0)  # Vector of average of average solution
 
         al_d.csv_writer(1, i + 1, {"Average best solutions": mean_best}, {"Average of average solutions": mean_av},
                         {"P: Iteration": [params[0][i]]}, {"P: Population": [params[1][i]]},
                         {"P: Probability of crossing": [params[2][i]]}, {"P: Probability of mutation": [params[3][i]]},
                         {"P: No. crossing points": ["1,2,3"]}, {"Out: Average time": [av_time]})  # 1 arg: number of data instance, 2 arg: number of
-        # data parameters, 3 and more args: dict
+        # Data parameters, 3 and more args: dict
 
         plt.plot(range(len(mean_best)), mean_best, label=f"{legend} = {float(params[param_num][i])}")
 
@@ -78,12 +78,12 @@ def generate_stats(data_dir: str, param_dir: str, its: int, title, legend, param
 
 
 if __name__ == '__main__':
-    data_dir_ = "data/instance1"  # data file
-    param_dir_ = "parameters/instance1.csv"  # parameter file
-    title_ = "zmienna populacja"  # plot title
-    legend_ = "populacja"  # legend text
-    param_num_ = 1  # var for legend
-    its_ = 50  # num of iterations
+    data_dir_ = "data/instance1"  # Data file
+    param_dir_ = "parameters/instance1.csv"  # Parameter file
+    title_ = "zmienna populacja"  # Plot title
+    legend_ = "populacja"  # Legend text
+    param_num_ = 1  # Var for legend
+    its_ = 50  # Number of iterations
 
     generate_stats(data_dir_, param_dir_, its_, title_, legend_, param_num_)
 

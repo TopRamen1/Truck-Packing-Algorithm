@@ -183,7 +183,7 @@ class MainStorage:
            :return: above dictionary - Dict[int, List[int]]"""
 
         list_of_used_addresses = []
-        list_of_used_storages = []  # list of active storages in case of there is a chance that there are storages
+        list_of_used_storages = []  # List of active storages in case of there is a chance that there are storages
         # without any set of packages
 
         for package in self.list_of_packages:
@@ -199,8 +199,8 @@ class MainStorage:
                 if p.address == s:
                     counters[0][s] += 1
 
-        dict_of_used_p_s = {}  # dict of number of used storages and counters :Dict: {storage: counter}
-        counters = counters[0][:]  # list of numbers of package's addresses
+        dict_of_used_p_s = {}  # Dict of number of used storages and counters :Dict: {storage: counter}
+        counters = counters[0][:]  # List of numbers of package's addresses
         for s in list_of_used_storages:
             for i, c in enumerate(counters):
                 if s == i:
@@ -211,6 +211,13 @@ class MainStorage:
 
 def create_testfile(num_of_tests: int, num_of_packages: int, package_intervals: List[int], num_of_storages: int,
                     storage_intervals: List[int]):
+    """Creates dictionary with .txt files containing data"
+    :params: amount of dictionaries, that will be created
+             number of packages
+             intervals of packages weights
+             number of storages
+             intervals of storages distances"""
+
     for i in range(num_of_tests):
         directory = 'data_random/test%d' % (i + 1)
         try:
@@ -240,6 +247,8 @@ def create_testfile(num_of_tests: int, num_of_packages: int, package_intervals: 
 
 
 def csv_reader_param(directory: str) -> List[List[int]]:
+    """Read parameters from .csv file"""
+
     cols = ["Iteration", "Population", "Crossing", "Mutation", "Crs1", "Crs2", "Crs3"]
     col_reader = pd.read_csv(directory, delimiter=';', names=cols)
     it = col_reader.Iteration.to_list()
@@ -254,6 +263,8 @@ def csv_reader_param(directory: str) -> List[List[int]]:
 
 
 def csv_reader_outputs(directory: str):
+    """Read outputs from .csv files"""
+
     cols = ["P: Iteration"]
     col_reader = pd.read_csv(directory, delimiter=',').T
     a = col_reader.to_dict('split')
