@@ -1,4 +1,4 @@
-from algorithm_data import MainStorage
+from algorithm_data import *
 import extra_functions as ex_fun
 from typing import List, Tuple
 import random
@@ -119,7 +119,9 @@ def print_sol(data: MainStorage, best_sol):
     return p_to_t
 
 
-def obj_fcn(data_mst: MainStorage, data_ind: Individual):
+def obj_fcn(data_mst: MainStorage, data_ind: Individual) -> float:
+    """Calculate function which describes our problem
+       :return: value of above function"""
     act_truck_pos = [i for i, m in enumerate(data_ind.ch_t) if m != -1]  # truck's id who has defined storage
     act_package_pos = [j for j, p in enumerate(data_ind.ch_p)]  # package's id
     sum_1, sum_2, sum_3 = 0, 0, 0
@@ -196,10 +198,8 @@ def check_lims(data_mst: MainStorage, data_ind: Individual):
 
 
 def random_chromosome(data: MainStorage):
-    """
-    Generates a random Chromosome for individual
-    :return: random chromosome
-    """
+    """Generates a random Chromosome for individual
+    :return: random chromosome"""
     # id lists for calculations
     storage_ids = list(range(0, len(data.list_of_storages)))
     truck_ids = list(range(0, len(data.list_of_trucks)))
@@ -246,13 +246,10 @@ def random_chromosome(data: MainStorage):
 
 
 def init_pop(data: MainStorage, pop_size: int) -> List[Individual]:
-    """
-    Initialize population
-    Function witch initializes population and returns it as a list of Indivituals
-    :return: random population
-    """
-    population = []
+    """Function witch initializes population and returns it as a list of Individuals
+    :return: random population"""
 
+    population = []
     for i in range(0, pop_size):
         new_ch = random_chromosome(data)
         population.append(Individual(new_ch[0], new_ch[1]))
@@ -261,10 +258,8 @@ def init_pop(data: MainStorage, pop_size: int) -> List[Individual]:
 
 
 def fitness(data: MainStorage, pop: List[Individual]):
-    """
-    Calculate probability for every individual using objective fcn
-    :return: rated population
-    """
+    """Calculate probability for every individual using objective fcn
+       :return: rated population"""
     sum1 = 0
     sum3 = 0
     obj_fcn_vals = []
@@ -320,33 +315,37 @@ def selection(data: MainStorage, pop: List[Individual]):
 
 def crossover(data: MainStorage, ind1: Individual, ind2: Individual, num_cross_points: List[int]) -> \
         Tuple[Individual, Individual]:
+    """Crossing specific parts of chromosome according to crossing points
+       :param data: class object - MainStorage
+       :param ind1: one of the parents who will be crossing with the other parent
+       :param ind2: second one of the parents
+       :param num_cross_points: number of crossing points (example:list [1,3,2] tells us that first element (gen) of one
+                                parent part of chromosome (ch_p) will change places with the other parent, then 3 next
+                                gens in ch_p in one parent will change places with 3 next gens in second parent, etc.)
+       :return: children (new individual who is the part of the new population)"""
+
     pop = [ind1, ind2]
+    # Dict of number of used storages and number of individual packages in used storages
+    dict_of_used_p_s = data.get_used_sto_pack
 
-    # print_pop(pop, "Population to crossover:")
-
-    dict_of_used_p_s = data.get_used_sto_pack  # dict of number of used storages and number of individual packages in used storages
-    # print(dict_of_used_p_s)
-
-    # generate divisors for every part of chromosome (ch_p), parts are the number of storages
+    # Generate divisors for every part of chromosome (ch_p), parts are the number of storages
     list_divisors = ex_fun.ge_div(dict_of_used_p_s, num_cross_points)
-    # print(list_divisors)
 
-    # generate List of empty Lists
+    # Generate List of empty Lists
     ch_p1 = []  # empty package's chromosome
     for i, j in enumerate(list_divisors):
         for p, k in enumerate(j):
             ch_p1.append([] * k)
     ch_p2 = ch_p1[:]
 
-    # generate lists which tells you which genes to take from a particular parent
+    # Generate lists which tells you which genes to take from a particular parent
     rand_lst1, rand_lst2 = ex_fun.ge_rand(list_divisors, num_cross_points)
 
-    # generate start position of each part of package(split based on address) and number of cuts of chromosome(crossing)
+    # Generate start position of each part of package(split based on address) and number of cuts of chromosome(crossing)
     pos = ex_fun.get_position(dict_of_used_p_s)
     counter = ex_fun.get_counter(list_divisors)
-    # print(counter)
 
-    # main algorithm for crossover: generate children from chromosome of individual parents
+    # Gain algorithm for crossover: generate children from chromosome of individual parents
     for num, it in enumerate(list_divisors):
         for i in rand_lst1[num]:
             pos_t = pos[num]
@@ -358,25 +357,19 @@ def crossover(data: MainStorage, ind1: Individual, ind2: Individual, num_cross_p
             ch_p1[i + counter[num]] = pop[1].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
             ch_p2[i + counter[num]] = pop[0].ch_p[(pos_t + (it[i] * i)):(pos_t + (it[i] * (i + 1)))]
 
-    # flattened function to do List from List of Lists
+    # Flattened function to do List from List of Lists
     ch_p1 = ex_fun.flat_list(ch_p1)
     ch_p2 = ex_fun.flat_list(ch_p2)
 
-    # make left part of chromosome: ch_t from right part of chromosome: ch_p
+    # Make left part of chromosome: ch_t from right part of chromosome: ch_p
     ch_t1 = ex_fun.cht_from_chp(data.list_of_trucks, data.list_of_packages, ch_p1)
     ch_t2 = ex_fun.cht_from_chp(data.list_of_trucks, data.list_of_packages, ch_p2)
 
-    # children = (Individual(ch_t1, ch_p1), Individual(ch_t2, ch_p2))
-
-    # print_pop([Individual(ch_t1, ch_p1), Individual(ch_t2, ch_p2)], "Population after crossover:")
-
+    # Fix all genes where occurs conflict
     ch_t1, ch_p1 = fix_ind(ch_t1, ch_p1, data)
     ch_t2, ch_p2 = fix_ind(ch_t2, ch_p2, data)
 
     children = (Individual(ch_t1, ch_p1), Individual(ch_t2, ch_p2))
-
-    # out1 = check_lims(data, children[0])
-    # out2 = check_lims(data, children[1])
 
     return children
 

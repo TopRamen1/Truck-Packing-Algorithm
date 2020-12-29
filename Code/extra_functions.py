@@ -18,7 +18,7 @@ def flat_list(org_list_: List[List[int]]) -> List[int]:
 
 
 def ge_rand(list_divisors_: List[List[int]], num_cross_points_: List[int]) -> Tuple[List[List[int]], List[List[int]]]:
-    """Generate lists which tells you which genes to take from a particular parent"""
+    """Generate lists which tells you which genes to take from a particular parent (used in function: crossover)"""
 
     rand_lst1 = []  # shows which part of divided chromosome stay from parent 1
     rand_lst2 = []  # shows which part of divided chromosome stay from parent 2
@@ -38,7 +38,8 @@ def ge_rand(list_divisors_: List[List[int]], num_cross_points_: List[int]) -> Tu
 
 
 def ge_div(dict_of_used_p_s_: Dict[int, int], num_cross_points_: List[int]) -> List[List[int]]:
-    """Generate divisors for every part of chromosome (ch_p), parts are the number of storages"""
+    """Generate divisors for every part of chromosome (ch_p), parts are the number of storages (used in function:
+       crossover)"""
 
     # list of list where every list has divisors of right side of chromosome: ch_p
     list_divisors: List[List[int]] = [[] for i in range(len(num_cross_points_))]
@@ -54,7 +55,7 @@ def ge_div(dict_of_used_p_s_: Dict[int, int], num_cross_points_: List[int]) -> L
 
 
 def cht_from_chp(list_of_trucks_: List, list_of_packages_: List, ch_p: List[int]) -> List[List[int]]:
-    """Make left part of chromosome: ch_t from right part of chromosome: ch_p"""
+    """Make left part of chromosome: ch_t from right part of chromosome: ch_p (used in function: crossover)"""
     ch_t = [[-1] for i in range(len(list_of_trucks_))]  # empty truck's chromosome
     for index, gen in enumerate(ch_p):
         if ch_t[gen] == [-1]:
@@ -67,6 +68,8 @@ def cht_from_chp(list_of_trucks_: List, list_of_packages_: List, ch_p: List[int]
 
 
 def get_position(dict_of_used_p_s_: Dict[int, int]) -> List[int]:
+    """Functions needed for count position (used in function: crossover)"""
+
     pos = [0]
     for key, value in dict_of_used_p_s_.items():
         value = pos[key] + value
@@ -77,6 +80,8 @@ def get_position(dict_of_used_p_s_: Dict[int, int]) -> List[int]:
 
 
 def get_counter(list_divisors_: List[List[int]]) -> List[int]:
+    """Functions needed for count counter (used in function: crossover)"""
+
     counter = [0]
     for i, j in enumerate(list_divisors_):
         value = len(j)
@@ -88,6 +93,10 @@ def get_counter(list_divisors_: List[List[int]]) -> List[int]:
 
 
 def find_divisors(dict_of_pack_sto: Dict[int, int]) -> Dict[int, List[int]]:
+    """Generate divisors for outside user to avoid conflict (used in GUI.py), because divisors should be divisible by
+       number of package which goes to one specific address (example: 15 packages to address: 1, possible divisors:
+       [1,3,5,15])"""
+
     final_dict = {}
     for ind, item in dict_of_pack_sto.items():
         i = 1
@@ -99,6 +108,3 @@ def find_divisors(dict_of_pack_sto: Dict[int, int]) -> Dict[int, List[int]]:
         final_dict[ind] = temp_list
 
     return final_dict
-
-
-
