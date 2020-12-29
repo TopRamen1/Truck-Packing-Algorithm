@@ -1,5 +1,4 @@
-from algorithm_data import DataFromFile
-from algorithm_data import MainStorage
+from algorithm_data import *
 import algorithm as al
 import extra_functions as ex_fun
 from tkinter import *
