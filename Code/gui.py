@@ -3,6 +3,7 @@ import algorithm as al
 import extra_functions as ex_fun
 from tkinter import *
 from tkinter.font import Font
+from PIL import ImageTk, Image
 
 if __name__ == '__main__':
     root = Tk()
@@ -11,7 +12,12 @@ if __name__ == '__main__':
     label1 = Label(root, text="\nEnter the data for the algorithm to work...")
     label1.pack()
 
-    #  Variables to storage necessary information about algorithm from Enter function
+    # Image reading and resizing
+    img = Image.open("quit.png")
+    resized1 = img.resize((75, 75), Image.ANTIALIAS)
+    img1 = ImageTk.PhotoImage(resized1)
+
+    # Variables to storage necessary information about algorithm from Enter function
     name_test_num = StringVar()
     name_num_it = StringVar()
     name_pop_it = StringVar()
@@ -24,14 +30,14 @@ if __name__ == '__main__':
 
     def submit1():
         """Command responsible for read data file (.txt)"""
-        global data, storage, d, logic_val1
+        global data, storage, d, logic_val1, img2
         ind = name_test_num.get()
         if ind.isnumeric():
-            #  Display small window in NE position to represent information about number of storages and packages
+            # Display small window in NE position to represent information about number of storages and packages
             root2 = Tk()
             root2.title("List of used packages and storages")
             root2.geometry("300x200+1005+0")
-            Label(root, text=f"\tConfirmation: Your data set is: test{ind}.txt\t\t\t").place(x=560, y=80)
+            Label(root, text=f"\tConfirmation: Your data set is: test{ind}.txt\t\t\t").place(x=563, y=80)
 
             data = DataFromFile(f"data/test{ind}/p.txt", f"data/test{ind}/t.txt", f"data/test{ind}/s.txt", int(ind))
             storage = MainStorage(data)
@@ -63,7 +69,7 @@ if __name__ == '__main__':
         global logic_val3, pop_al
         ind = name_pop_it.get()
         if ind.isnumeric():
-            Label(root, text=f"\tConfirmation: Number of population is: {ind}\t\t\t").place(x=580, y=160)
+            Label(root, text=f"\tConfirmation: Number of population is: {ind}\t\t\t").place(x=563, y=160)
             logic_val3 = True
             pop_al = ind
         else:
@@ -132,6 +138,7 @@ if __name__ == '__main__':
                                      f"\t\t\t\t\t\t\t\t\t\t\t\t\t \n\n\n\n\n\n\n\n\n\n\n\n").place(x=40, y=480 + t * 20)
         del p_to_t
 
+
     # Display interface responsible for number of test
     Label(root, text="Test number in the library: /Code/data:  ").place(x=10, y=80)
     Label(root, text="test").place(x=290, y=80)
@@ -158,5 +165,8 @@ if __name__ == '__main__':
     # Display interface responsible for starting algorithm work
     Font2 = Font(family="Times New Roman", size=27, weight="bold")
     alg_button = Button(root, font=Font2, text="Start algorithm", command=submit5, ).place(x=400, y=300)
+
+    # Display interface responsible for quit GUI
+    Button(root, image=img1, command=root.destroy).place(x=700, y=270)
 
     root.mainloop()
