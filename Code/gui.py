@@ -1,13 +1,14 @@
-from algorithm_data import *
+from algorithm_data import DataFromFile, MainStorage
 import algorithm as al
 import extra_functions as ex_fun
 from tkinter import *
 from tkinter.font import Font
+from graphviz import Digraph
 
 if __name__ == '__main__':
     root = Tk()
     root.title("Truck Packing Algorithm GUI")
-    root.geometry("1000x400")
+    root.geometry("1000x1000")
     label1 = Label(root, text="\nEnter the data for the algorithm to work...")
     label1.pack()
 
@@ -27,7 +28,7 @@ if __name__ == '__main__':
         global data, storage, d, logic_val1
         ind = name_test_num.get()
         if ind.isnumeric():
-            #  Display small window in NE position to represent information about number of storages and packages part 1
+            #  Display small window in NE position to represent information about number of storages and packages
             root2 = Tk()
             root2.title("List of used packages and storages")
             root2.geometry("300x200+1005+0")
@@ -38,8 +39,8 @@ if __name__ == '__main__':
             d = storage.get_used_sto_pack
 
             it = 10
-            for i, j in d.items():
-                Label(root2, text=f"Number of packages to storage no. {i}:\t{j}").place(x=10, y=it)
+            for ip, j in d.items():
+                Label(root2, text=f"Number of packages to storage no. {ip}:\t{j}").place(x=10, y=it)
                 it += 20
             logic_val1 = True
         else:
@@ -79,23 +80,23 @@ if __name__ == '__main__':
         data_temp = ind.strip()
         temp = data_temp.split(',')
         checking_list = []
-        for i in temp:
-            checking_list.append(int(i))
+        for ip in temp:
+            checking_list.append(int(ip))
         if len(checking_list) < len(d):
             Label(root, text=f"\t\tToo low number of cuts\t\t\t\t\t").place(x=550, y=210)
         elif len(checking_list) > len(d):
             Label(root, text=f"\t\tToo much number of cuts\t\t\t\t\t").place(x=550, y=210)
         elif len(checking_list) == len(d):
             counter = 0
-            for i, val in enumerate(checking_list):
-                if val in dict_of_cuts[i]:
+            for ip, val in enumerate(checking_list):
+                if val in dict_of_cuts[ip]:
                     counter += 1
             if counter == len(d):
                 Label(root, text=f"\tConfirmation: Number of crossing points is: {ind}\t\t\t\t").place(x=530, y=210)
                 logic_val4 = True
                 # Change list of strings to list of ints
                 cross_al = []
-                for i, j in enumerate(temp):
+                for ip, j in enumerate(temp):
                     cross_al.append(int(j))
             else:
                 Label(root, text=f"\t\tOne or more of cut(s) is incorrect\t\t\t\t\t").place(x=520, y=210)
@@ -106,8 +107,31 @@ if __name__ == '__main__':
         logic_tuple = logic_val1, logic_val2, logic_val3, logic_val4
         logic_final = all(logic_tuple)
         if logic_final:
-            al.genetic_alg(storage, int(iter_al), int(pop_al), 0.9, 0.05, cross_al, False, True)  # start working algorithm
+            # Start working algorithm
+            sol, _, _ = al.genetic_alg(storage, int(iter_al), int(pop_al), 0.9, 0.05, cross_al, False, True)
 
+            # Display interface with final result, which truck takes specific package
+            font1 = Font(family="Times New Roman", size=18)
+            Label(root, font=font1, text="The best solution obtained by this algorithm:").place(x=10, y=400)
+
+            p_to_t = {}
+            for i in range(0, len(sol.ch_p)):
+                if sol.ch_p[i] in p_to_t.keys():
+                    p_to_t[sol.ch_p[i]].append(i)
+                else:
+                    p_to_t[sol.ch_p[i]] = [i]
+
+            Label(root, text=" - Transportation cost: {:.2f} PLN".format(sol.obj_fcn)).place(x=10, y=440)
+            Label(root, text=" - Loading of trucks:").place(x=10, y=460)
+
+            for t, (k, v) in enumerate(p_to_t.items()):
+                temp_sum = 0
+                for e in v:
+                    temp_sum += storage.list_of_packages[e].weight
+                    Label(root, text="{}. Truck id: {},  Load: {},  Packages: {},  Sum of weights: {},  Address: {}"
+                                     "\t\t\t\t\t\t\t".format(t, k, storage.list_of_trucks[k].load, v, temp_sum,
+                                                             storage.list_of_packages[v[0]].address)). \
+                        place(x=40, y=480 + t * 20)
 
     # Display interface responsible for number of test
     Label(root, text="Test number in the library: /Code/data:  ").place(x=10, y=80)
@@ -133,8 +157,7 @@ if __name__ == '__main__':
     Button(root, text="Submit", command=submit4).place(x=450, y=207)
 
     # Display interface responsible for starting algorithm work
-    newFont = Font(family="Courier New", size=25, weight="bold")
-    alg_button = Button(root, font=newFont, text="Start algorithm", command=submit5,
-                        ).place(x=340, y=300)
+    Font2 = Font(family="Times New Roman", size=27, weight="bold")
+    alg_button = Button(root, font=Font2, text="Start algorithm", command=submit5, ).place(x=400, y=300)
 
     root.mainloop()
