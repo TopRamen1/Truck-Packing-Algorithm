@@ -137,8 +137,8 @@ if __name__ == '__main__':
                     Label(root, text=f"{t}. Truck id: {k},  Load: {storage.list_of_trucks[k].load},  Packages: {v}, "
                                      f"Sum of weights: {temp_sum},  Address: {storage.list_of_packages[v[0]].address}"
                                      f"\t\t\t\t\t\t\t\t\t\t\t\t\t \n\n\n\n\n\n\n\n\n\n\n\n").place(x=40, y=480 + t * 20)
-        del p_to_t
-        ex_fun.visualisation(p_to_t)
+
+        ex_fun.visualisation(storage, p_to_t)
 
 
     # Display interface responsible for number of test

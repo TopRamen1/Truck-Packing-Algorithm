@@ -13,7 +13,7 @@ digraph {
 	"Main storage" -> "Storage id. 3" [label="Distance: 200 km"]
 	node [fillcolor=green fontcolor=black shape=box style=filled]
 	truck0 [label="1
-Truck id. 7
+Truck id. 19
 Load: 2500.0
 Number of packages: 5
 Sum of weights: 2250.0
@@ -46,10 +46,10 @@ Weight: 400.0"]
 	"Storage id. 1" -> truck0
 	node [fillcolor=green fontcolor=black shape=box style=filled]
 	truck1 [label="2
-Truck id. 1
-Load: 1500.0
-Number of packages: 3
-Sum of weights: 1193.0
+Truck id. 10
+Load: 2000.0
+Number of packages: 2
+Sum of weights: 1967.0
 "]
 	node [fillcolor=lightgreen fontcolor=black shape=box style=filled]
 	package6 [label="6
@@ -58,124 +58,92 @@ Weight: 400.0"]
 	truck1 -> package6
 	node [fillcolor=lightgreen fontcolor=black shape=box style=filled]
 	package7 [label="7
-Package id. 7
-Weight: 450.0"]
+Package id. 6
+Weight: 1567.0"]
 	truck1 -> package7
-	node [fillcolor=lightgreen fontcolor=black shape=box style=filled]
-	package8 [label="8
-Package id. 8
-Weight: 343.0"]
-	truck1 -> package8
 	"Storage id. 2" -> truck1
 	node [fillcolor=green fontcolor=black shape=box style=filled]
 	truck2 [label="3
-Truck id. 19
-Load: 2500.0
-Number of packages: 1
-Sum of weights: 1567.0
+Truck id. 2
+Load: 2000.0
+Number of packages: 4
+Sum of weights: 1693.0
 "]
 	node [fillcolor=lightgreen fontcolor=black shape=box style=filled]
+	package8 [label="8
+Package id. 7
+Weight: 450.0"]
+	truck2 -> package8
+	node [fillcolor=lightgreen fontcolor=black shape=box style=filled]
 	package9 [label="9
-Package id. 6
-Weight: 1567.0"]
+Package id. 8
+Weight: 343.0"]
 	truck2 -> package9
-	"Storage id. 2" -> truck2
-	node [fillcolor=green fontcolor=black shape=box style=filled]
-	truck3 [label="4
-Truck id. 0
-Load: 1000.0
-Number of packages: 2
-Sum of weights: 900.0
-"]
 	node [fillcolor=lightgreen fontcolor=black shape=box style=filled]
 	package10 [label="10
 Package id. 9
 Weight: 500.0"]
-	truck3 -> package10
+	truck2 -> package10
 	node [fillcolor=lightgreen fontcolor=black shape=box style=filled]
 	package11 [label="11
 Package id. 10
 Weight: 400.0"]
-	truck3 -> package11
-	"Storage id. 2" -> truck3
+	truck2 -> package11
+	"Storage id. 2" -> truck2
 	node [fillcolor=green fontcolor=black shape=box style=filled]
-	truck4 [label="5
-Truck id. 2
-Load: 2000.0
-Number of packages: 4
-Sum of weights: 2000.0
+	truck3 [label="4
+Truck id. 23
+Load: 2500.0
+Number of packages: 5
+Sum of weights: 2100.0
 "]
 	node [fillcolor=lightgreen fontcolor=black shape=box style=filled]
 	package12 [label="12
 Package id. 11
 Weight: 200.0"]
-	truck4 -> package12
+	truck3 -> package12
 	node [fillcolor=lightgreen fontcolor=black shape=box style=filled]
 	package13 [label="13
-Package id. 12
-Weight: 100.0"]
-	truck4 -> package13
-	node [fillcolor=lightgreen fontcolor=black shape=box style=filled]
-	package14 [label="14
 Package id. 13
 Weight: 1500.0"]
-	truck4 -> package14
+	truck3 -> package13
 	node [fillcolor=lightgreen fontcolor=black shape=box style=filled]
-	package15 [label="15
-Package id. 17
-Weight: 200.0"]
-	truck4 -> package15
-	"Storage id. 3" -> truck4
-	node [fillcolor=green fontcolor=black shape=box style=filled]
-	truck5 [label="6
-Truck id. 12
-Load: 1000.0
-Number of packages: 1
-Sum of weights: 100.0
-"]
-	node [fillcolor=lightgreen fontcolor=black shape=box style=filled]
-	package16 [label="16
+	package14 [label="14
 Package id. 14
 Weight: 100.0"]
-	truck5 -> package16
-	"Storage id. 3" -> truck5
+	truck3 -> package14
+	node [fillcolor=lightgreen fontcolor=black shape=box style=filled]
+	package15 [label="15
+Package id. 15
+Weight: 200.0"]
+	truck3 -> package15
+	node [fillcolor=lightgreen fontcolor=black shape=box style=filled]
+	package16 [label="16
+Package id. 18
+Weight: 100.0"]
+	truck3 -> package16
+	"Storage id. 3" -> truck3
 	node [fillcolor=green fontcolor=black shape=box style=filled]
-	truck6 [label="7
-Truck id. 16
-Load: 1000.0
-Number of packages: 1
-Sum of weights: 200.0
+	truck4 [label="5
+Truck id. 15
+Load: 2500.0
+Number of packages: 3
+Sum of weights: 2320.0
 "]
 	node [fillcolor=lightgreen fontcolor=black shape=box style=filled]
 	package17 [label="17
-Package id. 15
-Weight: 200.0"]
-	truck6 -> package17
-	"Storage id. 3" -> truck6
-	node [fillcolor=green fontcolor=black shape=box style=filled]
-	truck7 [label="8
-Truck id. 3
-Load: 2500.0
-Number of packages: 1
-Sum of weights: 2020.0
-"]
+Package id. 12
+Weight: 100.0"]
+	truck4 -> package17
 	node [fillcolor=lightgreen fontcolor=black shape=box style=filled]
 	package18 [label="18
 Package id. 16
 Weight: 2020.0"]
-	truck7 -> package18
-	"Storage id. 3" -> truck7
-	node [fillcolor=green fontcolor=black shape=box style=filled]
-	truck8 [label="9
-Truck id. 6
-Load: 2000.0
-Number of packages: 1
-Sum of weights: 100.0
-"]
+	truck4 -> package18
 	node [fillcolor=lightgreen fontcolor=black shape=box style=filled]
 	package19 [label="19
-Package id. 18
-Weight: 100.0"]
-	truck8 -> package19
-	"Storage id. 3" -> truck8
+Package id. 17
+Weight: 200.0"]
+	truck4 -> package19
+	"Storage id. 3" -> truck4
 }
