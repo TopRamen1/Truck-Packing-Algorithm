@@ -113,6 +113,7 @@ def find_divisors(dict_of_pack_sto: Dict[int, int]) -> Dict[int, List[int]]:
 
 
 def visualisation(storage, p_to_t: Dict[int, List[int]]) -> None:
+    """Generate .pdf and .txt with graph visualisation final result of working algorithm"""
     dict_st = storage.get_used_sto_pack  # dict of used storages and packages
 
     graph = Digraph(comment='Visualisation')

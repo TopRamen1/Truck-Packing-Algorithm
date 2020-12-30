@@ -138,6 +138,7 @@ if __name__ == '__main__':
                                      f"Sum of weights: {temp_sum},  Address: {storage.list_of_packages[v[0]].address}"
                                      f"\t\t\t\t\t\t\t\t\t\t\t\t\t \n\n\n\n\n\n\n\n\n\n\n\n").place(x=40, y=480 + t * 20)
 
+        #  Graph visualisation to .pdf and .txt (.pdf will be shown )
         ex_fun.visualisation(storage, p_to_t)
 
 
