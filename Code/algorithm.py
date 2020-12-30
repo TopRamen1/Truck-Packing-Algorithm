@@ -27,7 +27,8 @@ class Individual:
                str(len(self.ch_p))
 
 
-def genetic_alg(data: MainStorage, it_num: int, pop_size: int, cross: float, mut: float, div: List[int], debug: bool = False, plot: bool = False, desc: str = ""):
+def genetic_alg(data: MainStorage, it_num: int, pop_size: int, cross: float, mut: float, div: List[int],
+                debug: bool = False, plot: bool = False, desc: str = ""):
     """Implementation of genetic algorithm
     :return: printed solutions for each iteration and its plots"""
 
@@ -98,7 +99,8 @@ def print_sol(data: MainStorage, best_sol):
         for e in v:
             sum += data.list_of_packages[e].weight
 
-        print(k, "ladowność: ", data.list_of_trucks[k].load, ", paczki: ", v, " suma wag: ", sum, " adres: ", data.list_of_packages[v[0]].address)
+        print(k, "ladowność: ", data.list_of_trucks[k].load, ", paczki: ", v, " suma wag: ", sum, " adres: ",
+              data.list_of_packages[v[0]].address)
 
     return p_to_t
 
@@ -133,6 +135,7 @@ def obj_fcn(data_mst: MainStorage, data_ind: Individual) -> float:
     final_result = sum_1 + sum_2 + sum_3
 
     return final_result
+
 
 class Exception1(Exception):
     def __init__(self, message="Przekroczono pierwszy warunek ograniczający"):
@@ -358,7 +361,7 @@ def cross_pop(data: MainStorage, pop: List[Individual], num_cross_points: List[i
     i = 0
     new_pop = []
     while i < len(pop) * cross_factor:
-        p1 = crossover(data, pop[i], pop[i+1], num_cross_points)
+        p1 = crossover(data, pop[i], pop[i + 1], num_cross_points)
         new_pop.append(p1[0])
         new_pop.append(p1[1])
         i += 2
@@ -500,7 +503,3 @@ def print_pop(pop: List[Individual], text: str, p: bool):
             print(j, i)
             j += 1
         print('\n')
-
-
-if __name__ == '__main__':
-    pass

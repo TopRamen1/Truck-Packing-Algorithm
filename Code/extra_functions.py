@@ -1,6 +1,7 @@
 """Additional file to define auxiliary functions"""
 from typing import List, Tuple, Dict
 import random
+from graphviz import Digraph
 
 
 def flat_list(org_list_: List[List[int]]) -> List[int]:
@@ -109,3 +110,53 @@ def find_divisors(dict_of_pack_sto: Dict[int, int]) -> Dict[int, List[int]]:
         final_dict[ind] = temp_list
 
     return final_dict
+
+
+def visualisation(storage, p_to_t: Dict[int, List[int]]) -> None:
+    dict_st = storage.get_used_sto_pack  # dict of used storages and packages
+
+    graph = Digraph(comment='Visualisation')
+    graph.attr(label='Visualization of the algorithms work results')
+    graph.attr(fontsize='20')
+
+    # Main storage visualization
+    graph.attr('node', shape='circle', style='filled', fillcolor='blue',
+               fontcolor='black')
+
+    graph.node('Main storage')
+
+    # Storage visualization (nodes and edges)
+    graph.attr('node', shape='circle', style='filled', fillcolor='lightblue2',
+               fontcolor='black')
+
+    for s in dict_st.keys():
+        graph.node('Storage id. %d' % (s + 1))
+        graph.edge('Main storage', 'Storage id. %d' % (s + 1),
+                   label='Distance: %d km' % storage.list_of_storages[s].distance)
+
+    # Truck visualisation (nodes and edges)
+    counter_all_packages = 1
+    for i, (t, p) in enumerate(p_to_t.items()):  # counter all trucks
+        graph.attr('node', shape='box', style='filled', fillcolor='green',
+                   fontcolor='black')
+        temp_sum = 0
+        for e in p:
+            temp_sum += storage.list_of_packages[e].weight
+
+        graph.node('truck%d' % i,
+                   label=f'{i + 1}\nTruck id. {t}\nLoad: {storage.list_of_trucks[t].load}\nNumber of packages: {len(p)}'
+                         f'\nSum of weights: {temp_sum}\n')
+
+        # Package visualisation (nodes and edges)
+        for pack in p:
+            graph.attr('node', shape='box', style='filled', fillcolor='lightgreen',
+                       fontcolor='black')
+            graph.node('package%d' % counter_all_packages, label=f'{counter_all_packages}\nPackage id. {pack}\nWeight: '
+                                                                 f'{storage.list_of_packages[pack].weight}')
+            graph.edge('truck%d' % i, 'package%d' % counter_all_packages)
+            counter_all_packages += 1
+
+        graph.edge(f'Storage id. {storage.list_of_packages[p[0]].address + 1}', 'truck%d' % i)
+
+    graph.render("graph_visualisation")
+    graph.view()

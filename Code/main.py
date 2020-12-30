@@ -2,6 +2,7 @@ from algorithm_data import DataFromFile, create_testfile
 from algorithm_data import MainStorage
 import algorithm as al
 import algorithm_data as al_d
+import extra_functions as ex_fun
 import matplotlib.pyplot as plt
 import numpy as np
 import time
@@ -32,6 +33,10 @@ def generate_stats(data_dir: str, param_dir: str, its: int, title, legend, param
                                                                False, False, "For data parameters: {}".format(i))
             elapsed = time.time() - start
 
+            #temporary POTEM USUNAC
+            p_to_t = al.print_sol(storage, it_best_sol)
+            ex_fun.visualisation(storage, p_to_t)
+            #############
             # Calculate sum of times
             av_time += elapsed
 
@@ -83,7 +88,7 @@ if __name__ == '__main__':
     title_ = "zmienna populacja"  # Plot title
     legend_ = "populacja"  # Legend text
     param_num_ = 1  # Var for legend
-    its_ = 50  # Number of iterations
+    its_ = 1  # Number of iterations
 
     generate_stats(data_dir_, param_dir_, its_, title_, legend_, param_num_)
 
@@ -208,4 +213,3 @@ if __name__ == '__main__':
     # plt.ylabel("wartość")
     # plt.xlabel("iteracje")
     # plt.show()
-

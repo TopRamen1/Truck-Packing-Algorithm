@@ -111,6 +111,7 @@ if __name__ == '__main__':
         """Command responsible for check if every variable has been entered"""
         logic_tuple = logic_val1, logic_val2, logic_val3, logic_val4
         logic_final = all(logic_tuple)
+
         if logic_final:
             # Start working algorithm
             sol, _, _ = al.genetic_alg(storage, int(iter_al), int(pop_al), 0.9, 0.05, cross_al, False, True)
@@ -137,6 +138,7 @@ if __name__ == '__main__':
                                      f"Sum of weights: {temp_sum},  Address: {storage.list_of_packages[v[0]].address}"
                                      f"\t\t\t\t\t\t\t\t\t\t\t\t\t \n\n\n\n\n\n\n\n\n\n\n\n").place(x=40, y=480 + t * 20)
         del p_to_t
+        ex_fun.visualisation(p_to_t)
 
 
     # Display interface responsible for number of test
