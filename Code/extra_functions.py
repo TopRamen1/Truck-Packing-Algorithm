@@ -131,8 +131,8 @@ def visualisation(storage, p_to_t: Dict[int, List[int]]) -> None:
                fontcolor='black')
 
     for s in dict_st.keys():
-        graph.node('Storage id. %d' % (s + 1))
-        graph.edge('Main storage', 'Storage id. %d' % (s + 1),
+        graph.node('Storage id. %d' % (s))
+        graph.edge('Main storage', 'Storage id. %d' % (s),
                    label='Distance: %d km' % storage.list_of_storages[s].distance)
 
     # Truck visualisation (nodes and edges)
@@ -157,7 +157,7 @@ def visualisation(storage, p_to_t: Dict[int, List[int]]) -> None:
             graph.edge('truck%d' % i, 'package%d' % counter_all_packages)
             counter_all_packages += 1
 
-        graph.edge(f'Storage id. {storage.list_of_packages[p[0]].address + 1}', 'truck%d' % i)
+        graph.edge(f'Storage id. {storage.list_of_packages[p[0]].address}', 'truck%d' % i)
 
     graph.render("graph_visualisation")
     graph.view()
