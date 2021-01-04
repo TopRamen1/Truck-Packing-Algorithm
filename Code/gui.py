@@ -4,6 +4,7 @@ import extra_functions as ex_fun
 from tkinter import *
 from tkinter.font import Font
 from PIL import ImageTk, Image
+import numpy as np
 
 if __name__ == '__main__':
     root = Tk()
@@ -113,21 +114,31 @@ if __name__ == '__main__':
         logic_final = all(logic_tuple)
 
         if logic_final:
-            # Start working algorithm
-            sol, _, _ = al.genetic_alg(storage, int(iter_al), int(pop_al), 0.9, 0.05, cross_al, False, True)
+            # Start working algorithm 10x
+            it = 0
+            sol_list_val = []  # list of values
+            sol_list_ob = []  # list of objects
+            while it < 10:
+                sol, _, _ = al.genetic_alg(storage, int(iter_al), int(pop_al), 0.9, 0.05, cross_al, False, True)
+                sol_list_val.append(sol.obj_fcn)
+                sol_list_ob.append(sol)
+                it += 1
 
             # Display interface with final result, which truck takes specific package
             font1 = Font(family="Times New Roman", size=18)
             Label(root, font=font1, text="The best solution obtained by this algorithm:").place(x=10, y=400)
 
+            sol_v = min(sol_list_val)
+            index_min = np.argmin(sol_list_val)
+            sol_o = sol_list_ob[index_min]
             p_to_t = {}
-            for i in range(0, len(sol.ch_p)):
-                if sol.ch_p[i] in p_to_t.keys():
-                    p_to_t[sol.ch_p[i]].append(i)
+            for i in range(0, len(sol_o.ch_p)):
+                if sol_o.ch_p[i] in p_to_t.keys():
+                    p_to_t[sol_o.ch_p[i]].append(i)
                 else:
-                    p_to_t[sol.ch_p[i]] = [i]
+                    p_to_t[sol_o.ch_p[i]] = [i]
 
-            Label(root, text=" - Transportation cost: {:.2f} PLN".format(sol.obj_fcn)).place(x=10, y=440)
+            Label(root, text=" - Transportation cost: {:.2f} PLN".format(sol_v)).place(x=10, y=440)
             Label(root, text=" - Loading of trucks:").place(x=10, y=460)
 
             for t, (k, v) in enumerate(p_to_t.items()):
