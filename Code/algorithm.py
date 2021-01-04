@@ -93,14 +93,18 @@ def print_sol(data: MainStorage, best_sol):
             p_to_t[best_sol.ch_p[i]] = [i]
 
     print("Koszt: ", best_sol.obj_fcn)
+    address = -1
 
     for k, v in p_to_t.items():
         sum = 0
         for e in v:
             sum += data.list_of_packages[e].weight
 
-        print(k, "ladowność: ", data.list_of_trucks[k].load, ", paczki: ", v, " suma wag: ", sum, " adres: ",
-              data.list_of_packages[v[0]].address)
+        if address != data.list_of_packages[v[0]].address:
+            address = data.list_of_packages[v[0]].address
+            print(f"\nMagazyn: {address}:")
+
+        print("Ciezarowka: ", data.list_of_trucks[k].load, ", paczki: ", v, " suma wag: ", sum)
 
     return p_to_t
 

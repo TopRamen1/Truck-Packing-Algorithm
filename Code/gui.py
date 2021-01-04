@@ -118,8 +118,8 @@ if __name__ == '__main__':
             it = 0
             sol_list_val = []  # list of values
             sol_list_ob = []  # list of objects
-            while it < 10:
-                sol, _, _ = al.genetic_alg(storage, int(iter_al), int(pop_al), 0.9, 0.05, cross_al, False, True)
+            while it < 20:
+                sol, _, _ = al.genetic_alg(storage, int(iter_al), int(pop_al), 0.9, 0.05, cross_al, False, False)
                 sol_list_val.append(sol.obj_fcn)
                 sol_list_ob.append(sol)
                 it += 1

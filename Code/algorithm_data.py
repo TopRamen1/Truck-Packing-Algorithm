@@ -259,7 +259,7 @@ def csv_reader_param(directory: str) -> List[List[int]]:
     crs2 = col_reader.Crs2.to_list()
     crs3 = col_reader.Crs3.to_list()
     del (pop[0], it[0], cross[0], mut[0])
-    return [it, pop, cross, mut, crs1, crs2, crs3]
+    return [it, pop, cross, mut, crs1[1:], crs2[1:], crs3[1:]]
 
 
 def csv_reader_outputs(directory: str):
